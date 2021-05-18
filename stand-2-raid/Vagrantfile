@@ -5,41 +5,46 @@ home = ENV['HOME']
 ENV["LC_ALL"] = "en_US.UTF-8"
 MACHINES = {
   :raid => {
-        :box_name => "centos/7",
-        :box_version => "1804.02",
+        :box_name => "centos/8",
+        :box_version => "1905.1",
         :ip_addr => '192.168.11.105',
     :disks => {
         :sata1 => {
             :dfile =>home+'/VirtualBox VMs/sata21.vdi',
-            :size => 10240,
+            :size => 10256,
             :port => 1
         },
         :sata2 => {
             :dfile =>home+'/VirtualBox VMs/sata22.vdi',
-            :size => 2048, # Megabytes
+            :size => 10256, # Megabytes
             :port => 2
         },
         :sata3 => {
             :dfile =>home+'/VirtualBox VMs/sata23.vdi',
-            :size => 1024, # Megabytes
+            :size => 10256, # Megabytes
             :port => 3
         },
         :sata4 => {
             :dfile =>home+'/VirtualBox VMs/sata24.vdi',
-            :size => 1024,
+            :size => 10256,
             :port => 4
         },
         :sata5 => {
             :dfile =>home+'/VirtualBox VMs/sata25.vdi',
-            :size => 1024,
+            :size => 10256,
             :port => 5
+        },
+        :sata6 => {
+            :dfile =>home+'/VirtualBox VMs/sata26.vdi',
+            :size => 10256,
+            :port => 6
         }
     }
   },
 }
 
 Vagrant.configure("2") do |config|
-        config.vm.box_version = "1804.02"
+        config.vm.box_version = "1905.1"
 
   MACHINES.each do |boxname, boxconfig|
         
@@ -75,7 +80,14 @@ Vagrant.configure("2") do |config|
               cp ~vagrant/.ssh/auth
               * ~root/.ssh
               
-               yum install -y epel-release mdadm  smartmontools  elfutils-libelf-devel hdparm gdisk   
+               yum install -y epel-release mdadm  smartmontools  elfutils-libelf-devel hdparm gdisk ;
+               mdadm --zero-superblock /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/sdg;
+               mdadm --create --verbose /dev/md/raid1 --level=1 --raid-devices=4 /dev/sdb /dev/sdc /dev/sdd /dev/sde ;
+               parted /dev/md127 -s mklablel gpt ; mkfs.xfs /dev/md127 ;
+
+               
+
+
                
 #&& zcat /proc/config.gz > ./.config  
 #попытаться удалить ядро в системе для освобождения для нового sudo rm -rf /lib/modules/4.18.0-80.el8.x86_64/

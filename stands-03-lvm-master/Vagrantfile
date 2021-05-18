@@ -6,7 +6,7 @@ ENV["LC_ALL"] = "en_US.UTF-8"
 MACHINES = {
   :lvm => {
         :box_name => "centos/7",
-        :box_version => "1905.1",
+        :box_version => "1804.02",
         :ip_addr => '192.168.11.111',
     :disks => {
         :sata1 => {
@@ -33,6 +33,11 @@ MACHINES = {
             :dfile =>home+'/VirtualBox VMs/sata35.vdi',
             :size => 1024,
             :port => 5
+        },
+        :sata6 => {
+            :dfile =>home+'/VirtualBox VMs/sata36.vdi',
+            :size => 1024,
+            :port => 6
         }
     }
   },
@@ -40,7 +45,7 @@ MACHINES = {
 
 Vagrant.configure("2") do |config|
 
-    config.vm.box_version = "1905.1"
+    config.vm.box_version = "1804.02"
     MACHINES.each do |boxname, boxconfig|
   
         config.vm.define boxname do |box|
