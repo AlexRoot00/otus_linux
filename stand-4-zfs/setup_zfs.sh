@@ -25,6 +25,6 @@ zpool status -v;
 zfs list -o recordsize; # /otus or /tank or/testmi
 zfs list -o compression;# /otus or /tank or/testmi
 zfs list -o checksum;   # /otus or /tank or/testmi
-zfs receive tank/otusdata < otus_task2.file
+cd .. ; zfs receive tank/otusdata < otus_task2.file
 cat /tank/otusdata/task1/file_mess/secret_message
 # https://github.com/sindresorhus/awesome
