@@ -28,3 +28,4 @@ zfs list -o checksum;   # /otus or /tank or/testmi
  cd /vagrant/; zfs receive tank/otusdata < otus_task2.file 
 cat /tank/otusdata/task1/file_mess/secret_message
 # https://github.com/sindresorhus/awesome
+#wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1KRBNW33QWqbvbVHa3hLJivOAt60yukkg' -O zfs_task1.tar.gz
