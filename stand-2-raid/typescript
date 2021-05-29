@@ -759,4 +759,35 @@ try again.[0m
 but another process is already executing an action on the machine.
 Vagrant locks each machine for access by only one process at a time.
 Please wait until the other Vagrant process finishes modifying this
-machine,
+machine, then try again.
+
+If you believe this message is in error, please check the process
+listing for any "ruby" or "vagrant" processes and kill them. Then
+try again.[0m
+]0;alexroot@RootDell: ~/stand-2-raid[01;32malexroot@RootDell[00m:[01;34m~/stand-2-raid[00m$ vagrant destroy [Kkia[Kllall vagrant
+]0;alexroot@RootDell: ~/stand-2-raid[01;32malexroot@RootDell[00m:[01;34m~/stand-2-raid[00m$ killall vagrantvagrant destroy up[Kdestroy 
+[0;31mAn action 'destroy' was attempted on the machine 'raid',
+but another process is already executing an action on the machine.
+Vagrant locks each machine for access by only one process at a time.
+Please wait until the other Vagrant process finishes modifying this
+machine, then try again.
+
+If you believe this message is in error, please check the process
+listing for any "ruby" or "vagrant" processes and kill them. Then
+try again.[0m
+]0;alexroot@RootDell: ~/stand-2-raid[01;32malexroot@RootDell[00m:[01;34m~/stand-2-raid[00m$ cp[K[Kcd ..
+]0;alexroot@RootDell: ~[01;32malexroot@RootDell[00m:[01;34m~[00m$ cd ..vagrant destroy cd ..[K[K[K[K[K[Kls 
+[0m[01;34m'Virtual Box'[0m      [01;34motus-linux[0m     [01;34mstand-4-zfs[0m            [01;34mstands-05-nfs[0m
+[01;34m'VirtualBox VMs'[0m   [01;34mstand-2-raid[0m   [01;34mstands-03-lvm-master[0m   [01;34mvdisks[0m
+]0;alexroot@RootDell: ~[01;32malexroot@RootDell[00m:[01;34m~[00m$ cd [K[Kp -r otus-linux/ /mnt/c/vagrant/otus_linux/
+]0;alexroot@RootDell: ~[01;32malexroot@RootDell[00m:[01;34m~[00m$ cp -r otus-linux/ /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/s /mnt/c/vagrant/otus_linux/tand /mnt/c/vagrant/otus_linux/s /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/- /mnt/c/vagrant/otus_linux/2 /mnt/c/vagrant/otus_linux/-raid/ /mnt/c/vagrant/otus_linux/
+]0;alexroot@RootDell: ~[01;32malexroot@RootDell[00m:[01;34m~[00m$ cp -r stand-2-raid/ /mnt/c/vagrant/otus_linux/[C[1P[1@4
+cp: cannot stat 'stand-4-raid/': No such file or directory
+]0;alexroot@RootDell: ~[01;32malexroot@RootDell[00m:[01;34m~[00m$ cp -r stand-4-raid/ /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/-zfs/ /mnt/c/vagrant/otus_linux/
+]0;alexroot@RootDell: ~[01;32malexroot@RootDell[00m:[01;34m~[00m$ cp -r stand-4-zfs/ /mnt/c/vagrant/otus_linux/[C[C[C[1P[1P[1@s[C[2@0-[1@3[C[C[C[C[C[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/-lvm-master/ /mnt/c/vagrant/otus_linux/
+]0;alexroot@RootDell: ~[01;32malexroot@RootDell[00m:[01;34m~[00m$ cp -r stands-03-lvm-master/ /mnt/c/vagrant/otus_linux/[C[C[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/[1P /mnt/c/vagrant/otus_linux/5 /mnt/c/vagrant/otus_linux/-nfs/ /mnt/c/vagrant/otus_linux/
+]0;alexroot@RootDell: ~[01;32malexroot@RootDell[00m:[01;34m~[00m$ v[Kcd[K[Kcd os[K[Kss[Ktands-03[K2[K3-lvm-master/
+]0;alexroot@RootDell: ~/stands-03-lvm-master[01;32malexroot@RootDell[00m:[01;34m~/stands-03-lvm-master[00m$ exit
+There are stopped jobs.
+
+Script done on 2021-05-18 11:31:36+10:00 [COMMAND_EXIT_CODE="0"]
