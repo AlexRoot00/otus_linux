@@ -1,3 +1,5 @@
 
 stands-09-systemd/atlassian-jira-software-8.17.0-x64.bin
 *.bin
+stands-09-systemd/.vagrant/bundler/global.sol
+stands-09-systemd/.vagrant/rgloader/loader.rb
