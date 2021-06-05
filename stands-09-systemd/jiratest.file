@@ -1,0 +1,12 @@
+[Unit]
+Description=JIRA
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=forking
+Restart=always
+RestartSec=1
+
+ExecStart="/opt/atlassian/jira/bin/start-jira.sh"
+ExecStop="/opt/atlassian/jira/bin/stop-jira.sh"
+[Install]
