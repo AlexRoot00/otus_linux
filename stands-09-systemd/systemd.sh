@@ -23,14 +23,14 @@ cp -r /var/www/html/ /var/www/otustestnet1.lan/
 #create files fcgi 
 echo "#!/usr/bin/python
 from flup.server.fcgi import WSGIServer
-from yourapplication import app
+from otustestnet.lan import app
 
 if __name__ == '__main__':
     WSGIServer(app).run()" >>/var/www/otustestnet.lan/html/app.fcgi
 chmod +x /var/www/otustestnet.lan/html/app.fcgi
 echo "#!/usr/bin/python
 from flup.server.fcgi import WSGIServer
-from yourapplication import app
+from otustestnet1.lan import app
 
 if __name__ == '__main__':
     WSGIServer(app).run()" >>/var/www/otustestnet1.lan/html/app.fcgi
