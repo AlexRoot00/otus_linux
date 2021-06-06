@@ -3,3 +3,12 @@ stands-09-systemd/atlassian-jira-software-8.17.0-x64.bin
 *.bin
 stands-09-systemd/.vagrant/bundler/global.sol
 stands-09-systemd/.vagrant/rgloader/loader.rb
+stands-09-systemd/.vagrant/machines/systemd/virtualbox/vagrant_cwd
+stands-09-systemd/.vagrant/machines/systemd/virtualbox/synced_folders
+stands-09-systemd/.vagrant/machines/systemd/virtualbox/private_key
+stands-09-systemd/.vagrant/machines/systemd/virtualbox/index_uuid
+stands-09-systemd/.vagrant/machines/systemd/virtualbox/id
+stands-09-systemd/.vagrant/machines/systemd/virtualbox/creator_uid
+stands-09-systemd/.vagrant/machines/systemd/virtualbox/box_meta
+stands-09-systemd/.vagrant/machines/systemd/virtualbox/action_set_name
+stands-09-systemd/.vagrant/machines/systemd/virtualbox/action_provision
