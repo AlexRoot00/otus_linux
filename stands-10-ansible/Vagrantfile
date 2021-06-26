@@ -1,0 +1,23 @@
+# -*- mode:ruby -*-
+#vi: set ft=ruby :
+Vagrant.configure(2) do |config|
+    config.vm.box = "centos/8"
+    config.vm.box_version = "2011.0"
+    config.vm.provider "virtualbox" do |v|
+    v.gui = false
+    v.memory = 256
+    v.cpus = 1
+  end
+
+  config.vm.define "nginx" do |nginx|
+    nginx.vm.network "private_network", ip: "192.168.50.10", virtualbox__intnet: "net1"
+    nginx.vm.hostname = "nginx"
+    ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+    nginx.vm.provision 'shell', inline: 'mkdir -p /root/.ssh'
+    nginx.vm.provision 'shell', inline: "echo #{ssh_pub_key} >> /root/.ssh/authorized_keys"
+    nginx.vm.provision 'shell', inline: "echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys", privileged: true
+    nginx.vm.provision "shell", path: "ansible copy.sh"
+  end
+
+
+end 

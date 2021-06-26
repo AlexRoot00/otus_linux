@@ -1,0 +1,54 @@
+# Runs only on nginx
+- hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+  - name: Install packages epel-release
+    dnf:
+      name:
+        - epel-release 
+      state: present
+
+# Runs only on nginx
+- hosts: nginx
+  become: true
+  gather_facts: false
+  tasks:
+  - name: Install packages only on nginx
+    yum:
+      name:
+        - epel-release
+        - nginx 
+      state: latest
+    notify:
+      -restart nginx
+  - name: 'Copy default.conf'
+    template:
+      src: ../templates/nginx.conf.j2
+      dest: /etc/nginx/nginx.conf
+
+  - name: 'Copy nginx index.html'
+    template:
+      src: ../templates/index.html.j2
+      dest: /usr/share/nginx/html/index.html
+  vars:
+    nginxport: 8080
+  handlers:
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restart
+    - name: start nginx
+      systemd:
+        name: nginx
+        state: start
+        enabled: yes
+
+    - name: DISABLE FIREWALL
+      systemd:
+        name: firewalld
+        state: disable
+    - name: STOP FIREWALL
+      systemd:
+        name: firewalld
+        state: stop
