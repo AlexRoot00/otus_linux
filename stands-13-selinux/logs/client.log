@@ -1,0 +1,847 @@
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+> quit
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$ 
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+> 
+> quit
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab       
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+> 
+> quit
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$ setenforce 0
+setenforce:  setenforce() failed
+[vagrant@client ~]$ sudo setenforce 0
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$ sudo setenforce 1
+[vagrant@client ~]$ getsebool -a | grep named
+named_tcp_bind_http_port --> on
+named_write_master_zones --> on
+[vagrant@client ~]$ ping www.ddns.lab
+PING www.ddns.lab (192.168.50.15) 56(84) bytes of data.
+64 bytes from web1.dns.lab (192.168.50.15): icmp_seq=1 ttl=64 time=0.012 ms
+64 bytes from web1.dns.lab (192.168.50.15): icmp_seq=2 ttl=64 time=0.020 ms
+^C
+--- www.ddns.lab ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1000ms
+rtt min/avg/max/mdev = 0.012/0.016/0.020/0.004 ms
+[vagrant@client ~]$ ping www.ddns.lab
+PING www.ddns.lab (192.168.50.15) 56(84) bytes of data.
+64 bytes from client.dns.lab (192.168.50.15): icmp_seq=1 ttl=64 time=0.010 ms
+64 bytes from client.dns.lab (192.168.50.15): icmp_seq=2 ttl=64 time=0.020 ms
+^C
+--- www.ddns.lab ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1000ms
+rtt min/avg/max/mdev = 0.010/0.015/0.020/0.005 ms
+[vagrant@client ~]$ ping www.ddns.lab
+PING www.ddns.lab (192.168.50.15) 56(84) bytes of data.
+64 bytes from web1.dns.lab (192.168.50.15): icmp_seq=1 ttl=64 time=0.014 ms
+64 bytes from web1.dns.lab (192.168.50.15): icmp_seq=2 ttl=64 time=0.030 ms
+64 bytes from web1.dns.lab (192.168.50.15): icmp_seq=3 ttl=64 time=0.027 ms
+^C
+--- www.ddns.lab ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 0.014/0.023/0.030/0.008 ms
+[vagrant@client ~]$ ping www.ddns.lab
+PING www.ddns.lab (192.168.50.15) 56(84) bytes of data.
+64 bytes from web1.dns.lab (192.168.50.15): icmp_seq=1 ttl=64 time=0.009 ms
+64 bytes from web1.dns.lab (192.168.50.15): icmp_seq=2 ttl=64 time=0.023 ms
+^C
+--- www.ddns.lab ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 0.009/0.016/0.023/0.007 ms
+[vagrant@client ~]$ sestatus
+SELinux status:                 enabled
+SELinuxfs mount:                /sys/fs/selinux
+SELinux root directory:         /etc/selinux
+Loaded policy name:             targeted
+Current mode:                   enforcing
+Mode from config file:          enforcing
+Policy MLS status:              enabled
+Policy deny_unknown status:     allowed
+Max kernel policy version:      31
+[vagrant@client ~]$ Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+alexroot@xps-15:~/Documents/vagrant/otus_linux/stands-13-selinux$ vagrant ssh client
+Last login: Sat Jul  3 06:12:49 2021 from 10.0.2.2
+###############################
+### Welcome to the DNS lab! ###
+###############################
+
+- Use this client to test the enviroment
+- with dig or nslookup. Ex:
+    dig @192.168.50.10 ns01.dns.lab
+
+- nsupdate is available in the ddns.lab zone. Ex:
+    nsupdate -k /etc/named.zonetransfer.key
+    server 192.168.50.10
+    zone ddns.lab 
+    update add www.ddns.lab. 60 A 192.168.50.15
+    send
+
+- rndc is also available to manage the servers
+    rndc -c ~/rndc.conf reload
+
+###############################
+### Enjoy! ####################
+###############################
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+alexroot@xps-15:~/Documents/vagrant/otus_linux/stands-13-selinux$ vagrant ssh client
+Last login: Sat Jul  3 06:32:47 2021 from 10.0.2.2
+###############################
+### Welcome to the DNS lab! ###
+###############################
+
+- Use this client to test the enviroment
+- with dig or nslookup. Ex:
+    dig @192.168.50.10 ns01.dns.lab
+
+- nsupdate is available in the ddns.lab zone. Ex:
+    nsupdate -k /etc/named.zonetransfer.key
+    server 192.168.50.10
+    zone ddns.lab 
+    update add www.ddns.lab. 60 A 192.168.50.15
+    send
+
+- rndc is also available to manage the servers
+    rndc -c ~/rndc.conf reload
+
+###############################
+### Enjoy! ####################
+###############################
+[vagrant@client ~]$ rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+alexroot@xps-15:~/Documents/vagrant/otus_linux/stands-13-selinux$ vagrant ssh client
+Last login: Sat Jul  3 07:10:47 2021 from 10.0.2.2
+###############################
+### Welcome to the DNS lab! ###
+###############################
+
+- Use this client to test the enviroment
+- with dig or nslookup. Ex:
+    dig @192.168.50.10 ns01.dns.lab
+
+- nsupdate is available in the ddns.lab zone. Ex:
+    nsupdate -k /etc/named.zonetransfer.key
+    server 192.168.50.10
+    zone ddns.lab 
+    update add www.ddns.lab. 60 A 192.168.50.15
+    send
+
+- rndc is also available to manage the servers
+    rndc -c ~/rndc.conf reload
+
+###############################
+### Enjoy! ####################
+###############################
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ audit2allow -M named_add --debug </var/log/audit/audit.log 
+-bash: /var/log/audit/audit.log: Permission denied
+[vagrant@client ~]$ audit2allow -M named_add --debug </var/log/audit/audit.log 
+-bash: /var/log/audit/audit.log: Permission denied
+[vagrant@client ~]$ audit2allow -M named_add --debug </var/log/audit/audit.log 
+-bash: /var/log/audit/audit.log: Permission denied
+[vagrant@client ~]$ audit2allow -M named_add --debug </var/log/audit/audit.log 
+-bash: /var/log/audit/audit.log: Permission denied
+[vagrant@client ~]$ audit2allow -M named_add --debug </var/log/audit/audit.log 
+-bash: /var/log/audit/audit.log: Permission denied
+[vagrant@client ~]$ sudo setsebool -P named_tcp_bind_http_port on
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> semodule -i named_add.pp
+incorrect section name: semodule
+> server 192.168.50.10
+> zone ddns.lab
+> > send
+incorrect section name: >
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+alexroot@xps-15:~/Documents/vagrant/otus_linux/stands-13-selinux$ vagrant ssh client
+Last login: Sat Jul  3 08:01:04 2021 from 10.0.2.2
+###############################
+### Welcome to the DNS lab! ###
+###############################
+
+- Use this client to test the enviroment
+- with dig or nslookup. Ex:
+    dig @192.168.50.10 ns01.dns.lab
+
+- nsupdate is available in the ddns.lab zone. Ex:
+    nsupdate -k /etc/named.zonetransfer.key
+    server 192.168.50.10
+    zone ddns.lab 
+    update add www.ddns.lab. 60 A 192.168.50.15
+    send
+
+- rndc is also available to manage the servers
+    rndc -c ~/rndc.conf reload
+
+###############################
+### Enjoy! ####################
+###############################
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+>  update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+alexroot@xps-15:~/Documents/vagrant/otus_linux/stands-13-selinux$ vagrant ssh client
+Last login: Sat Jul  3 08:40:25 2021 from 10.0.2.2
+###############################
+### Welcome to the DNS lab! ###
+###############################
+
+- Use this client to test the enviroment
+- with dig or nslookup. Ex:
+    dig @192.168.50.10 ns01.dns.lab
+
+- nsupdate is available in the ddns.lab zone. Ex:
+    nsupdate -k /etc/named.zonetransfer.key
+    server 192.168.50.10
+    zone ddns.lab 
+    update add www.ddns.lab. 60 A 192.168.50.15
+    send
+
+- rndc is also available to manage the servers
+    rndc -c ~/rndc.conf reload
+
+###############################
+### Enjoy! ####################
+###############################
+[vagrant@client ~]$ update add www.ddns.lab. 60 A 192.168.50.15
+-bash: update: command not found
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$     nsupdate -k /etc/named.zonetransfer.key
+>     server 192.168.50.10
+>     zone ddns.lab 
+>     update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+alexroot@xps-15:~/Documents/vagrant/otus_linux/stands-13-selinux$ vagrant ssh client
+Last login: Sat Jul  3 08:51:04 2021 from 10.0.2.2
+###############################
+### Welcome to the DNS lab! ###
+###############################
+
+- Use this client to test the enviroment
+- with dig or nslookup. Ex:
+    dig @192.168.50.10 ns01.dns.lab
+
+- nsupdate is available in the ddns.lab zone. Ex:
+    nsupdate -k /etc/named.zonetransfer.key
+    server 192.168.50.10
+    zone ddns.lab 
+    update add www.ddns.lab. 60 A 192.168.50.15
+    send
+
+- rndc is also available to manage the servers
+    rndc -c ~/rndc.conf reload
+
+###############################
+### Enjoy! ####################
+###############################
+[vagrant@client ~]$     nsupdate -k /etc/named.zonetransfer.key
+>     server 192.168.50.10
+>     zone ddns.lab 
+>     update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> exit
+incorrect section name: exit
+>     rndc -c ~/rndc.conf reload
+incorrect section name: rndc
+> exit
+incorrect section name: exit
+> quit
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$     nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$     nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+alexroot@xps-15:~/Documents/vagrant/otus_linux/stands-13-selinux$ vagrant ssh client
+Last login: Sat Jul  3 09:14:02 2021 from 10.0.2.2
+###############################
+### Welcome to the DNS lab! ###
+###############################
+
+- Use this client to test the enviroment
+- with dig or nslookup. Ex:
+    dig @192.168.50.10 ns01.dns.lab
+
+- nsupdate is available in the ddns.lab zone. Ex:
+    nsupdate -k /etc/named.zonetransfer.key
+    server 192.168.50.10
+    zone ddns.lab 
+    update add www.ddns.lab. 60 A 192.168.50.15
+    send
+
+- rndc is also available to manage the servers
+    rndc -c ~/rndc.conf reload
+
+###############################
+### Enjoy! ####################
+###############################
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$     nsupdate -k /etc/named.zonetransfer.key
+>     server 192.168.50.10
+>     zone ddns.lab 
+>     update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit 
+[vagrant@client ~]$ rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+alexroot@xps-15:~/Documents/vagrant/otus_linux/stands-13-selinux$ vagrant ssh client
+Last login: Sat Jul  3 09:56:29 2021 from 10.0.2.2
+###############################
+### Welcome to the DNS lab! ###
+###############################
+
+- Use this client to test the enviroment
+- with dig or nslookup. Ex:
+    dig @192.168.50.10 ns01.dns.lab
+
+- nsupdate is available in the ddns.lab zone. Ex:
+    nsupdate -k /etc/named.zonetransfer.key
+    server 192.168.50.10
+    zone ddns.lab 
+    update add www.ddns.lab. 60 A 192.168.50.15
+    send
+
+- rndc is also available to manage the servers
+    rndc -c ~/rndc.conf reload
+
+###############################
+### Enjoy! ####################
+###############################
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$     nsupdate -k /etc/named.zonetransfer.key
+>     server 192.168.50.10
+>     zone ddns.lab  
+>     update add www.ddns.lab. 60 A 192.168.50.15
+> send
+> quit
+[vagrant@client ~]$ reboot
+==== AUTHENTICATING FOR org.freedesktop.login1.reboot ===
+Authentication is required for rebooting the system.
+Authenticating as: root
+Password: 
+==== AUTHENTICATION COMPLETE ===
+[vagrant@client ~]$ Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+alexroot@xps-15:~/Documents/vagrant/otus_linux/stands-13-selinux$ vagrant ssh client
+alexroot@xps-15:~/Documents/vagrant/otus_linux/stands-13-selinux$ vagrant ssh client
+Last login: Sat Jul  3 10:01:16 2021 from 10.0.2.2
+###############################
+### Welcome to the DNS lab! ###
+###############################
+
+- Use this client to test the enviroment
+- with dig or nslookup. Ex:
+    dig @192.168.50.10 ns01.dns.lab
+
+- nsupdate is available in the ddns.lab zone. Ex:
+    nsupdate -k /etc/named.zonetransfer.key
+    server 192.168.50.10
+    zone ddns.lab 
+    update add www.ddns.lab. 60 A 192.168.50.15
+    send
+
+- rndc is also available to manage the servers
+    rndc -c ~/rndc.conf reload
+
+###############################
+### Enjoy! ####################
+###############################
+[vagrant@client ~]$ ping www.ddns.lab,
+ping: www.ddns.lab,: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$     nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+> quit
+[vagrant@client ~]$ ping www.ddns.lab,
+ping: www.ddns.lab,: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ sudo setsebool -P named_tcp_bind_http_port on
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.dns.lab
+ping: www.dns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ setsebool -P named_tcp_bind_http_port on
+Cannot set persistent booleans, please try as root.
+[vagrant@client ~]$ sudo setsebool -P named_tcp_bind_http_port on
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+> quit
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+> quit
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+> quit
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ ping www.ddns.lab
+ping: www.ddns.lab: Name or service not known
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit    
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> send
+update failed: SERVFAIL
+> send
+update failed: SERVFAIL
+> exit
+incorrect section name: exit
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> nsupdate -k /etc/named.zonetransfer.key
+incorrect section name: nsupdate
+> semodule -i named_add.pp
+incorrect section name: semodule
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> send
+update failed: SERVFAIL
+> send
+update failed: SERVFAIL
+> send
+update failed: SERVFAIL
+> send
+update failed: SERVFAIL
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+alexroot@xps-15:~/Documents/vagrant/otus_linux/stands-13-selinux$ vagrant ssh clientLast login: Sat Jul  3 12:15:22 2021 from 10.0.2.2
+###############################
+### Welcome to the DNS lab! ###
+###############################
+
+- Use this client to test the enviroment
+- with dig or nslookup. Ex:
+    dig @192.168.50.10 ns01.dns.lab
+
+- nsupdate is available in the ddns.lab zone. Ex:
+    nsupdate -k /etc/named.zonetransfer.key
+    server 192.168.50.10
+    zone ddns.lab 
+    update add www.ddns.lab. 60 A 192.168.50.15
+    send
+
+- rndc is also available to manage the servers
+    rndc -c ~/rndc.conf reload
+
+###############################
+### Enjoy! ####################
+###############################
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> send
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ setsebool -P named_tcp_bind_http_port on
+Cannot set persistent booleans, please try as root.
+[vagrant@client ~]$ sudo setsebool -P named_tcp_bind_http_port on
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$     rndc -c ~/rndc.conf reload
+server reload successful
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+update failed: SERVFAIL
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> quit
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+> update add www.ddns.lab. 60 A 192.168.50.15
+> send
+> quit
+[vagrant@client ~]$ ping www.ddns.lab
+PING www.ddns.lab (192.168.50.15) 56(84) bytes of data.
+64 bytes from web1.dns.lab (192.168.50.15): icmp_seq=1 ttl=64 time=0.008 ms
+^C
+--- www.ddns.lab ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.008/0.008/0.008/0.000 ms
+[vagrant@client ~]$ 

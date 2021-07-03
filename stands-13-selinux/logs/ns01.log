@@ -1,0 +1,693 @@
+
+
+/usr/bin/checkmodule:  error(s) encountered while parsing configuration
+/usr/bin/checkmodule:  loading policy configuration from named_add.te
+[root@ns01 vagrant]# ls -Z /etc/named/drw-rw-rw-. root named unconfined_u:object_r:etc_t:s0   dynamic
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.50.168.192.rev
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab.view1
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.newdns.lab
+[root@ns01 vagrant]# ls -Z /etc/named/drw-rw-rw-. root named unconfined_u:object_r:etc_t:s0   dynamic
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.50.168.192.rev
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab.view1
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.newdns.lab
+[root@ns01 vagrant]# ls -Z /etc/named/dynamic/
+-rw-rw----. named named system_u:object_r:etc_t:s0       named.ddns.lab
+-rw-rw----. named named system_u:object_r:etc_t:s0       named.ddns.lab.view1
+[root@ns01 vagrant]# audit2why </var/log/audit/audit.log [root@ns01 vagrant]# systemctl restart named
+[root@ns01 vagrant]# systemctl status named
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:15:50 UTC; 6s ago
+  Process: 25495 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25508 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25506 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25510 (named)
+   CGroup: /system.slice/named.service
+           └─25510 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 20...#53
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './NS/IN': 2001:5...#53
+Jul 03 15:15:50 ns01 named[25510]: managed-keys-zone/view1: Key 20326 for zone . a...ted
+Jul 03 15:15:50 ns01 named[25510]: resolver priming query complete
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 20...#53
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 20...#53
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 20...#53
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 20...#53
+Jul 03 15:15:50 ns01 named[25510]: managed-keys-zone/default: Key 20326 for zone ....ted
+Jul 03 15:15:51 ns01 named[25510]: resolver priming query complete
+Hint: Some lines were ellipsized, use -l to show in full.
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:15:50 UTC; 9s ago
+  Process: 25495 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25508 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25506 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25510 (named)
+   CGroup: /system.slice/named.service
+           └─25510 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:503:ba3e::2:30#53
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './NS/IN': 2001:503:ba3e::2:30#53
+Jul 03 15:15:50 ns01 named[25510]: managed-keys-zone/view1: Key 20326 for zone . acceptance timer complete: key now trusted
+Jul 03 15:15:50 ns01 named[25510]: resolver priming query complete
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:7fd::1#53
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:500:200::b#53
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:500:9f::42#53
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:500:a8::e#53
+Jul 03 15:15:50 ns01 named[25510]: managed-keys-zone/default: Key 20326 for zone . acceptance timer complete: key now trusted
+Jul 03 15:15:51 ns01 named[25510]: resolver priming query complete
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:15:50 UTC; 36s ago
+  Process: 25495 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25508 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25506 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25510 (named)
+   CGroup: /system.slice/named.service
+           └─25510 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:503:ba3e::2:30#53
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './NS/IN': 2001:503:ba3e::2:30#53
+Jul 03 15:15:50 ns01 named[25510]: managed-keys-zone/view1: Key 20326 for zone . acceptance timer complete: key now trusted
+Jul 03 15:15:50 ns01 named[25510]: resolver priming query complete
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:7fd::1#53
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:500:200::b#53
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:500:9f::42#53
+Jul 03 15:15:50 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:500:a8::e#53
+Jul 03 15:15:50 ns01 named[25510]: managed-keys-zone/default: Key 20326 for zone . acceptance timer complete: key now trusted
+Jul 03 15:15:51 ns01 named[25510]: resolver priming query complete
+[root@ns01 vagrant]# audit2allow -M named_add --debug </var/log/audit/audit.log 
+compilation failed:
+named_add.te:6:ERROR 'syntax error' at token '' on line 6:
+
+
+/usr/bin/checkmodule:  error(s) encountered while parsing configuration
+/usr/bin/checkmodule:  loading policy configuration from named_add.te
+[root@ns01 vagrant]# audit2why  </var/log/audit/audit.log
+[root@ns01 vagrant]# setsebool -P named_tcp_bind_http_port on
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:15:50 UTC; 2min 57s ago
+  Process: 25495 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25508 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25506 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25510 (named)
+   CGroup: /system.slice/named.service
+           └─25510 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:18:43 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:500:2d::d#53
+Jul 03 15:18:43 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:500:200::b#53
+Jul 03 15:18:43 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:7fe::53#53
+Jul 03 15:18:43 ns01 named[25510]: network unreachable resolving './DNSKEY/IN': 2001:500:9f::42#53
+Jul 03 15:18:43 ns01 named[25510]: zone ddns.lab/IN/default: loading from master file /etc/named/dynamic/named.ddns.lab failed: permission denied
+Jul 03 15:18:43 ns01 named[25510]: zone ddns.lab/IN/default: not loaded due to errors.
+Jul 03 15:18:43 ns01 named[25510]: all zones loaded
+Jul 03 15:18:43 ns01 named[25510]: running
+Jul 03 15:18:43 ns01 named[25510]: managed-keys-zone/view1: Key 20326 for zone . acceptance timer complete: key now trusted
+Jul 03 15:18:43 ns01 named[25510]: managed-keys-zone/default: Key 20326 for zone . acceptance timer complete: key now trusted
+[root@ns01 vagrant]# audit2why  </var/log/audit/audit.log
+[root@ns01 vagrant]# ls -Z /etc/named/dynamic/
+-rw-rw----. named named system_u:object_r:etc_t:s0       named.ddns.lab
+-rw-rw----. named named system_u:object_r:etc_t:s0       named.ddns.lab.view1
+[root@ns01 vagrant]# audit2why  </var/log/audit/audit.log
+[root@ns01 vagrant]# ls -Z /etc/named/
+drw-rw-rw-. root named unconfined_u:object_r:etc_t:s0   dynamic
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.50.168.192.rev
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab.view1
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.newdns.lab
+[root@ns01 vagrant]# chown named named /etc/named/dynamic/
+chown: cannot access 'named': No such file or directory
+[root@ns01 vagrant]# chown -R named /etc/named/dynamic/
+[root@ns01 vagrant]# ls -Z /etc/named/
+drw-rw-rw-. named named unconfined_u:object_r:etc_t:s0   dynamic
+-rw-rw----. root  named system_u:object_r:etc_t:s0       named.50.168.192.rev
+-rw-rw----. root  named system_u:object_r:etc_t:s0       named.dns.lab
+-rw-rw----. root  named system_u:object_r:etc_t:s0       named.dns.lab.view1
+-rw-rw----. root  named system_u:object_r:etc_t:s0       named.newdns.lab
+[root@ns01 vagrant]# systemctl restart named
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:20:45 UTC; 5s ago
+  Process: 25545 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25558 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25556 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25560 (named)
+   CGroup: /system.slice/named.service
+           └─25560 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:20:45 ns01 named[25560]: network unreachable resolving './NS/IN': 2001:500:2::c#53
+Jul 03 15:20:45 ns01 named[25560]: network unreachable resolving './DNSKEY/IN': 2001:500:1::53#53
+Jul 03 15:20:45 ns01 named[25560]: network unreachable resolving './NS/IN': 2001:500:1::53#53
+Jul 03 15:20:45 ns01 named[25560]: network unreachable resolving './DNSKEY/IN': 2001:500:9f::42#53
+Jul 03 15:20:45 ns01 named[25560]: network unreachable resolving './NS/IN': 2001:500:9f::42#53
+Jul 03 15:20:46 ns01 named[25560]: network unreachable resolving './DNSKEY/IN': 2001:500:9f::42#53
+Jul 03 15:20:46 ns01 named[25560]: managed-keys-zone/default: Key 20326 for zone . acceptance timer complete: key now trusted
+Jul 03 15:20:46 ns01 named[25560]: managed-keys-zone/view1: Key 20326 for zone . acceptance timer complete: key now trusted
+Jul 03 15:20:46 ns01 named[25560]: resolver priming query complete
+Jul 03 15:20:46 ns01 named[25560]: resolver priming query complete
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:20:45 UTC; 13s ago
+  Process: 25545 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25558 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25556 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25560 (named)
+   CGroup: /system.slice/named.service
+           └─25560 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:20:56 ns01 named[25560]: automatic empty zone: view default: 85.100.IN-ADDR.ARPA
+Jul 03 15:20:56 ns01 named[25560]: automatic empty zone: view default: 86.100.IN-ADDR.ARPA
+Jul 03 15:20:56 ns01 named[25560]: automatic empty zone: view default: 87.100.IN-ADDR.ARPA
+Jul 03 15:20:56 ns01 named[25560]: automatic empty zone: view default: 88.100.IN-ADDR.ARPA
+Jul 03 15:20:56 ns01 named[25560]: automatic empty zone: view default: 89.100.IN-ADDR.ARPA
+Jul 03 15:20:56 ns01 named[25560]: automatic empty zone: view default: 90.100.IN-ADDR.ARPA
+Jul 03 15:20:56 ns01 named[25560]: zone ddns.lab/IN/view1: loading from master file /etc/named/dynamic/named.ddns.lab.view1 failed: permission denied
+Jul 03 15:20:56 ns01 named[25560]: zone ddns.lab/IN/view1: not loaded due to errors.
+Jul 03 15:20:56 ns01 named[25560]: zone ddns.lab/IN/default: loading from master file /etc/named/dynamic/named.ddns.lab failed: permission denied
+Jul 03 15:20:56 ns01 named[25560]: zone ddns.lab/IN/default: not loaded due to errors.
+[root@ns01 vagrant]# ls -Z /etc/named/dynamic/
+-rw-rw----. named named system_u:object_r:etc_t:s0       named.ddns.lab
+-rw-rw----. named named system_u:object_r:etc_t:s0       named.ddns.lab.view1
+[root@ns01 vagrant]# chown -R root /etc/named/dynamic/
+[root@ns01 vagrant]# ls -Z /etc/named/dynamic/
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.ddns.lab
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.ddns.lab.view1
+[root@ns01 vagrant]# systemctl restart named
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:21:44 UTC; 4s ago
+  Process: 25575 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25591 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25589 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25593 (named)
+   CGroup: /system.slice/named.service
+           └─25593 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:21:44 ns01 named[25593]: automatic empty zone: view default: 127.100.IN-ADDR.ARPA
+Jul 03 15:21:44 ns01 named[25593]: automatic empty zone: view default: 127.IN-ADDR.ARPA
+Jul 03 15:21:44 ns01 named[25593]: automatic empty zone: view default: 254.169.IN-ADDR.ARPA
+Jul 03 15:21:44 ns01 named[25593]: automatic empty zone: view default: 2.0.192.IN-ADDR.ARPA
+Jul 03 15:21:44 ns01 named[25593]: automatic empty zone: view default: 100.51.198.IN-ADDR.ARPA
+Jul 03 15:21:44 ns01 named[25593]: automatic empty zone: view default: 113.0.203.IN-ADDR.ARPA
+Jul 03 15:21:44 ns01 named[25593]: zone ddns.lab/IN/view1: loading from master file /etc/named/dynamic/named.ddns.lab.view1 failed: permission denied
+Jul 03 15:21:44 ns01 named[25593]: zone ddns.lab/IN/view1: not loaded due to errors.
+Jul 03 15:21:44 ns01 named[25593]: zone ddns.lab/IN/default: loading from master file /etc/named/dynamic/named.ddns.lab failed: permission denied
+Jul 03 15:21:44 ns01 named[25593]: zone ddns.lab/IN/default: not loaded due to errors.
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:21:44 UTC; 12s ago
+  Process: 25575 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25591 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25589 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25593 (named)
+   CGroup: /system.slice/named.service
+           └─25593 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:21:44 ns01 named[25593]: automatic empty zone: view default: 100.51.198.IN-ADDR.ARPA
+Jul 03 15:21:44 ns01 named[25593]: automatic empty zone: view default: 113.0.203.IN-ADDR.ARPA
+Jul 03 15:21:44 ns01 named[25593]: zone ddns.lab/IN/view1: loading from master file /etc/named/dynamic/named.ddns.lab.view1 failed: permission denied
+Jul 03 15:21:44 ns01 named[25593]: zone ddns.lab/IN/view1: not loaded due to errors.
+Jul 03 15:21:44 ns01 named[25593]: zone ddns.lab/IN/default: loading from master file /etc/named/dynamic/named.ddns.lab failed: permission denied
+Jul 03 15:21:44 ns01 named[25593]: zone ddns.lab/IN/default: not loaded due to errors.
+Jul 03 15:21:54 ns01 named[25593]: zone ddns.lab/IN/view1: loading from master file /etc/named/dynamic/named.ddns.lab.view1 failed: permission denied
+Jul 03 15:21:54 ns01 named[25593]: zone ddns.lab/IN/view1: not loaded due to errors.
+Jul 03 15:21:54 ns01 named[25593]: zone ddns.lab/IN/default: loading from master file /etc/named/dynamic/named.ddns.lab failed: permission denied
+Jul 03 15:21:54 ns01 named[25593]: zone ddns.lab/IN/default: not loaded due to errors.
+[root@ns01 vagrant]# ls -Z /etc/named/dynamic/
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.ddns.lab
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.ddns.lab.view1
+[root@ns01 vagrant]# ls -Z /etc/named/
+drw-rw-rw-. root named unconfined_u:object_r:etc_t:s0   dynamic
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.50.168.192.rev
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab.view1
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.newdns.lab
+[root@ns01 vagrant]# chroot -R 0755 /etc/named/dynamic/
+chroot: invalid option -- 'R'
+Try 'chroot --help' for more information.
+[root@ns01 vagrant]# chroot 0755 /etc/named/dynamic/
+chroot: cannot change root directory to 0755: No such file or directory
+[root@ns01 vagrant]# chroot 0755 /etc/named/dynamic
+chroot: cannot change root directory to 0755: No such file or directory
+[root@ns01 vagrant]# chmod -R 0755 /etc/named/dynamic
+[root@ns01 vagrant]# ls -Z /etc/named/
+drwxr-xr-x. root named unconfined_u:object_r:etc_t:s0   dynamic
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.50.168.192.rev
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab.view1
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.newdns.lab
+[root@ns01 vagrant]# systemctl restart named
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:23:06 UTC; 5s ago
+  Process: 25612 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25626 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25624 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25628 (named)
+   CGroup: /system.slice/named.service
+           └─25628 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 123.100.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 124.100.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 125.100.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 126.100.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 127.100.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 127.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 254.169.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 2.0.192.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 100.51.198.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 113.0.203.IN-ADDR.ARPA
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:23:06 UTC; 11s ago
+  Process: 25612 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25626 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25624 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25628 (named)
+   CGroup: /system.slice/named.service
+           └─25628 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 123.100.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 124.100.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 125.100.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 126.100.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 127.100.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 127.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 254.169.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 2.0.192.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 100.51.198.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 113.0.203.IN-ADDR.ARPA
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:23:06 UTC; 46s ago
+  Process: 25612 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25626 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25624 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25628 (named)
+   CGroup: /system.slice/named.service
+           └─25628 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 127.100.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 127.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 254.169.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 2.0.192.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 100.51.198.IN-ADDR.ARPA
+Jul 03 15:23:05 ns01 named[25628]: automatic empty zone: view default: 113.0.203.IN-ADDR.ARPA
+Jul 03 15:23:50 ns01 named[25628]: client @0x7f422003c3e0 192.168.50.15#54869/key zonetransfer.key: view view1: signer "zonetransfer.key" approved
+Jul 03 15:23:50 ns01 named[25628]: client @0x7f422003c3e0 192.168.50.15#54869/key zonetransfer.key: view view1: updating zone 'ddns.lab/IN': adding an RR at 'www.ddns.lab' A 192.168.50.15
+Jul 03 15:23:50 ns01 named[25628]: /etc/named/dynamic/named.ddns.lab.view1.jnl: create: permission denied
+Jul 03 15:23:50 ns01 named[25628]: client @0x7f422003c3e0 192.168.50.15#54869/key zonetransfer.key: view view1: updating zone 'ddns.lab/IN': error: journal open failed: unexpected error
+[root@ns01 vagrant]# ls -Z /etc/named/
+drwxr-xr-x. root named unconfined_u:object_r:etc_t:s0   dynamic
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.50.168.192.rev
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab.view1
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.newdns.lab
+[root@ns01 vagrant]# ls -Z /etc/named/dynamic/
+-rwxr-xr-x. root named system_u:object_r:etc_t:s0       named.ddns.lab
+-rwxr-xr-x. root named system_u:object_r:etc_t:s0       named.ddns.lab.view1
+[root@ns01 vagrant]# chmod -R 0766 /etc/named/dynamic
+[root@ns01 vagrant]# systemctl restart named
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:24:37 UTC; 2s ago
+  Process: 25646 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25660 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25658 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25662 (named)
+   CGroup: /system.slice/named.service
+           └─25662 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:24:37 ns01 named[25662]: automatic empty zone: view default: 127.IN-ADDR.ARPA
+Jul 03 15:24:37 ns01 named[25662]: automatic empty zone: view default: 254.169.IN-ADDR.ARPA
+Jul 03 15:24:37 ns01 named[25662]: automatic empty zone: view default: 2.0.192.IN-ADDR.ARPA
+Jul 03 15:24:37 ns01 named[25662]: automatic empty zone: view default: 100.51.198.IN-ADDR.ARPA
+Jul 03 15:24:37 ns01 named[25662]: automatic empty zone: view default: 113.0.203.IN-ADDR.ARPA
+Jul 03 15:24:37 ns01 systemd[1]: Started Berkeley Internet Name Domain (DNS).
+Jul 03 15:24:37 ns01 named[25662]: zone ddns.lab/IN/view1: loading from master file /etc/named/dynamic/named.ddns.lab.view1 failed: permission denied
+Jul 03 15:24:37 ns01 named[25662]: zone ddns.lab/IN/view1: not loaded due to errors.
+Jul 03 15:24:37 ns01 named[25662]: zone ddns.lab/IN/default: loading from master file /etc/named/dynamic/named.ddns.lab failed: permission denied
+Jul 03 15:24:37 ns01 named[25662]: zone ddns.lab/IN/default: not loaded due to errors.
+[root@ns01 vagrant]# chmod -R 0777 /etc/named/dynamic
+[root@ns01 vagrant]# systemctl restart named
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:24:52 UTC; 1s ago
+  Process: 25674 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25687 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25685 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25689 (named)
+   CGroup: /system.slice/named.service
+           └─25689 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:24:52 ns01 bash[25685]: zone localhost.localdomain/IN: loaded serial 0
+Jul 03 15:24:52 ns01 bash[25685]: zone localhost/IN: loaded serial 0
+Jul 03 15:24:52 ns01 bash[25685]: zone 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa/IN: loaded serial 0
+Jul 03 15:24:52 ns01 bash[25685]: zone 1.0.0.127.in-addr.arpa/IN: loaded serial 0
+Jul 03 15:24:52 ns01 bash[25685]: zone 0.in-addr.arpa/IN: loaded serial 0
+Jul 03 15:24:52 ns01 bash[25685]: zone dns.lab/IN: loaded serial 2711201408
+Jul 03 15:24:52 ns01 bash[25685]: zone ddns.lab/IN: loaded serial 2711201407
+Jul 03 15:24:52 ns01 bash[25685]: zone newdns.lab/IN: loaded serial 2711201409
+Jul 03 15:24:52 ns01 bash[25685]: zone 50.168.192.in-addr.arpa/IN: loaded serial 2711201408
+Jul 03 15:24:52 ns01 systemd[1]: Started Berkeley Internet Name Domain (DNS).
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:24:52 UTC; 34s ago
+  Process: 25674 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25687 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25685 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25689 (named)
+   CGroup: /system.slice/named.service
+           └─25689 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:24:52 ns01 bash[25685]: zone 0.in-addr.arpa/IN: loaded serial 0
+Jul 03 15:24:52 ns01 bash[25685]: zone dns.lab/IN: loaded serial 2711201408
+Jul 03 15:24:52 ns01 bash[25685]: zone ddns.lab/IN: loaded serial 2711201407
+Jul 03 15:24:52 ns01 bash[25685]: zone newdns.lab/IN: loaded serial 2711201409
+Jul 03 15:24:52 ns01 bash[25685]: zone 50.168.192.in-addr.arpa/IN: loaded serial 2711201408
+Jul 03 15:24:52 ns01 systemd[1]: Started Berkeley Internet Name Domain (DNS).
+Jul 03 15:25:24 ns01 named[25689]: client @0x7f832c03c3e0 192.168.50.15#28214/key zonetransfer.key: view view1: signer "zonetransfer.key" approved
+Jul 03 15:25:24 ns01 named[25689]: client @0x7f832c03c3e0 192.168.50.15#28214/key zonetransfer.key: view view1: updating zone 'ddns.lab/IN': adding an RR at 'www.ddns.lab' A 192.168.50.15
+Jul 03 15:25:24 ns01 named[25689]: /etc/named/dynamic/named.ddns.lab.view1.jnl: create: permission denied
+Jul 03 15:25:24 ns01 named[25689]: client @0x7f832c03c3e0 192.168.50.15#28214/key zonetransfer.key: view view1: updating zone 'ddns.lab/IN': error: journal open failed: unexpected error
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:24:52 UTC; 55s ago
+  Process: 25674 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25687 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25685 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25689 (named)
+   CGroup: /system.slice/named.service
+           └─25689 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:24:52 ns01 bash[25685]: zone 0.in-addr.arpa/IN: loaded serial 0
+Jul 03 15:24:52 ns01 bash[25685]: zone dns.lab/IN: loaded serial 2711201408
+Jul 03 15:24:52 ns01 bash[25685]: zone ddns.lab/IN: loaded serial 2711201407
+Jul 03 15:24:52 ns01 bash[25685]: zone newdns.lab/IN: loaded serial 2711201409
+Jul 03 15:24:52 ns01 bash[25685]: zone 50.168.192.in-addr.arpa/IN: loaded serial 2711201408
+Jul 03 15:24:52 ns01 systemd[1]: Started Berkeley Internet Name Domain (DNS).
+Jul 03 15:25:24 ns01 named[25689]: client @0x7f832c03c3e0 192.168.50.15#28214/key zonetransfer.key: view view1: signer "zonetransfer.key" approved
+Jul 03 15:25:24 ns01 named[25689]: client @0x7f832c03c3e0 192.168.50.15#28214/key zonetransfer.key: view view1: updating zone 'ddns.lab/IN': adding an RR at 'www.ddns.lab' A 192.168.50.15
+Jul 03 15:25:24 ns01 named[25689]: /etc/named/dynamic/named.ddns.lab.view1.jnl: create: permission denied
+Jul 03 15:25:24 ns01 named[25689]: client @0x7f832c03c3e0 192.168.50.15#28214/key zonetransfer.key: view view1: updating zone 'ddns.lab/IN': error: journal open failed: unexpected error
+[root@ns01 vagrant]# ls -Z /etc/named/dynamic/
+-rwxrwxrwx. root named system_u:object_r:etc_t:s0       named.ddns.lab
+-rwxrwxrwx. root named system_u:object_r:etc_t:s0       named.ddns.lab.view1
+[root@ns01 vagrant]# touch /etc/named/dynamic/named.ddns.lab.view1.jnl
+[root@ns01 vagrant]# chown named /etc/named/dynamic/named.ddns.lab.view1.jnl
+[root@ns01 vagrant]# chmod 1755 /etc/named/dynamic/named.ddns.lab.view1.jnl
+[root@ns01 vagrant]# chmod 1777 /etc/named/dynamic/named.ddns.lab.view1.jnl
+[root@ns01 vagrant]# ls -Z /etc/named/dynamic/
+-rwxrwxrwx. root  named system_u:object_r:etc_t:s0       named.ddns.lab
+-rwxrwxrwx. root  named system_u:object_r:etc_t:s0       named.ddns.lab.view1
+-rwxrwxrwt. named root  unconfined_u:object_r:etc_t:s0   named.ddns.lab.view1.jnl
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:24:52 UTC; 2min 19s ago
+  Process: 25674 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25687 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25685 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25689 (named)
+   CGroup: /system.slice/named.service
+           └─25689 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:27:06 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:500:200::b#53
+Jul 03 15:27:06 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:500:2f::f#53
+Jul 03 15:27:06 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:503:c27::2:30#53
+Jul 03 15:27:06 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:500:2d::d#53
+Jul 03 15:27:06 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:7fe::53#53
+Jul 03 15:27:06 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:500:a8::e#53
+Jul 03 15:27:06 ns01 named[25689]: all zones loaded
+Jul 03 15:27:06 ns01 named[25689]: running
+Jul 03 15:27:06 ns01 named[25689]: managed-keys-zone/default: Key 20326 for zone . acceptance timer complete: key now trusted
+Jul 03 15:27:06 ns01 named[25689]: managed-keys-zone/view1: Key 20326 for zone . acceptance timer complete: key now trusted
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:24:52 UTC; 2min 44s ago
+  Process: 25674 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25687 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25685 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25689 (named)
+   CGroup: /system.slice/named.service
+           └─25689 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:27:06 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:503:c27::2:30#53
+Jul 03 15:27:06 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:500:2d::d#53
+Jul 03 15:27:06 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:7fe::53#53
+Jul 03 15:27:06 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:500:a8::e#53
+Jul 03 15:27:06 ns01 named[25689]: all zones loaded
+Jul 03 15:27:06 ns01 named[25689]: running
+Jul 03 15:27:06 ns01 named[25689]: managed-keys-zone/default: Key 20326 for zone . acceptance timer complete: key now trusted
+Jul 03 15:27:06 ns01 named[25689]: managed-keys-zone/view1: Key 20326 for zone . acceptance timer complete: key now trusted
+Jul 03 15:27:35 ns01 named[25689]: client @0x7f832c03c3e0 192.168.50.15#16485/key zonetransfer.key: view view1: signer "zonetransfer.key" approved
+Jul 03 15:27:35 ns01 named[25689]: /etc/named/dynamic/named.ddns.lab.view1.jnl: open: permission denied
+[root@ns01 vagrant]# ls -Z /etc/named/dynamic/
+-rwxrwxrwx. root  named system_u:object_r:etc_t:s0       named.ddns.lab
+-rwxrwxrwx. root  named system_u:object_r:etc_t:s0       named.ddns.lab.view1
+-rwxrwxrwt. named root  unconfined_u:object_r:etc_t:s0   named.ddns.lab.view1.jnl
+[root@ns01 vagrant]# chmod 1666restorecon -v '/etc/named/dynamic/named.ddns.lab.view1.jnl' /etc/named/dynamic/named.ddns.lab.view1.jnl
+chmod: invalid mode: '1666restorecon'
+Try 'chmod --help' for more information.
+[root@ns01 vagrant]# restorecon -v '/etc/named/dynamic/named.ddns.lab.view1.jnl'
+[root@ns01 vagrant]# ls -Z /etc/named/dynamic/-rwxrwxrwx. root  named system_u:object_r:etc_t:s0       named.ddns.lab
+-rwxrwxrwx. root  named system_u:object_r:etc_t:s0       named.ddns.lab.view1
+-rwxrwxrwt. named root  unconfined_u:object_r:etc_t:s0   named.ddns.lab.view1.jnl
+[root@ns01 vagrant]# systemctl status named -l● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:24:52 UTC; 4min 1s ago
+  Process: 25674 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25687 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25685 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25689 (named)
+   CGroup: /system.slice/named.service
+           └─25689 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:28:48 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:500:200::b#53
+Jul 03 15:28:48 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:7fe::53#53
+Jul 03 15:28:48 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:7fe::53#53
+Jul 03 15:28:48 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:500:2f::f#53
+Jul 03 15:28:48 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:500:2::c#53
+Jul 03 15:28:48 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:dc3::35#53
+Jul 03 15:28:48 ns01 named[25689]: all zones loaded
+Jul 03 15:28:48 ns01 named[25689]: running
+Jul 03 15:28:48 ns01 named[25689]: managed-keys-zone/view1: Key 20326 for zone . acceptance timer complete: key now trusted
+Jul 03 15:28:48 ns01 named[25689]: managed-keys-zone/default: Key 20326 for zone . acceptance timer complete: key now trusted
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:24:52 UTC; 4min 31s ago
+  Process: 25674 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25687 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25685 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25689 (named)
+   CGroup: /system.slice/named.service
+           └─25689 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:28:48 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:500:2::c#53
+Jul 03 15:28:48 ns01 named[25689]: network unreachable resolving './DNSKEY/IN': 2001:dc3::35#53
+Jul 03 15:28:48 ns01 named[25689]: all zones loaded
+Jul 03 15:28:48 ns01 named[25689]: running
+Jul 03 15:28:48 ns01 named[25689]: managed-keys-zone/view1: Key 20326 for zone . acceptance timer complete: key now trusted
+Jul 03 15:28:48 ns01 named[25689]: managed-keys-zone/default: Key 20326 for zone . acceptance timer complete: key now trusted
+Jul 03 15:29:21 ns01 named[25689]: client @0x7f832c03c3e0 192.168.50.15#17997/key zonetransfer.key: view view1: signer "zonetransfer.key" approved
+Jul 03 15:29:21 ns01 named[25689]: client @0x7f832c03c3e0 192.168.50.15#17997/key zonetransfer.key: view view1: updating zone 'ddns.lab/IN': adding an RR at 'www.ddns.lab' A 192.168.50.15
+Jul 03 15:29:21 ns01 named[25689]: /etc/named/dynamic/named.ddns.lab.view1.jnl: open: permission denied
+Jul 03 15:29:21 ns01 named[25689]: client @0x7f832c03c3e0 192.168.50.15#17997/key zonetransfer.key: view view1: updating zone 'ddns.lab/IN': error: journal open failed: unexpected error
+[root@ns01 vagrant]# restorecon -RFv /etc/named.conf
+[root@ns01 vagrant]# chmod 644 /etc/named.conf
+[root@ns01 vagrant]# systemctl restart named[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:31:56 UTC; 2s ago
+  Process: 25758 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25771 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25769 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25773 (named)
+   CGroup: /system.slice/named.service
+           └─25773 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:31:56 ns01 named[25773]: automatic empty zone: view default: 113.0.203.IN-ADDR.ARPA
+Jul 03 15:31:56 ns01 named[25773]: automatic empty zone: view default: 255.255.255.255.IN-ADDR.ARPA
+Jul 03 15:31:56 ns01 named[25773]: automatic empty zone: view default: 0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.IP6.ARPA
+Jul 03 15:31:56 ns01 named[25773]: automatic empty zone: view default: D.F.IP6.ARPA
+Jul 03 15:31:56 ns01 named[25773]: automatic empty zone: view default: 8.E.F.IP6.ARPA
+Jul 03 15:31:56 ns01 named[25773]: automatic empty zone: view default: 9.E.F.IP6.ARPA
+Jul 03 15:31:56 ns01 named[25773]: automatic empty zone: view default: A.E.F.IP6.ARPA
+Jul 03 15:31:56 ns01 named[25773]: automatic empty zone: view default: B.E.F.IP6.ARPA
+Jul 03 15:31:56 ns01 named[25773]: zone ddns.lab/IN/view1: journal rollforward failed: no more
+Jul 03 15:31:56 ns01 named[25773]: zone ddns.lab/IN/view1: not loaded due to errors.
+[root@ns01 vagrant]# ls -Z /etc/named/dynamic/-rwxrwxrwx. root  named system_u:object_r:etc_t:s0       named.ddns.lab
+-rwxrwxrwx. root  named system_u:object_r:etc_t:s0       named.ddns.lab.view1
+-rwxrwxrwt. named root  unconfined_u:object_r:etc_t:s0   named.ddns.lab.view1.jnl
+[root@ns01 vagrant]# rm -rf /etc/named/dynamic/named.ddns.lab.view1.jnl 
+[root@ns01 vagrant]# systemctl restart named
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:33:16 UTC; 2s ago
+  Process: 25795 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25808 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25806 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25810 (named)
+   CGroup: /system.slice/named.service
+           └─25810 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:33:16 ns01 named[25810]: automatic empty zone: view default: B.E.F.IP6.ARPA
+Jul 03 15:33:16 ns01 named[25810]: automatic empty zone: view default: 8.B.D.0.1.0.0.2.IP6.ARPA
+Jul 03 15:33:16 ns01 named[25810]: automatic empty zone: view default: EMPTY.AS112.ARPA
+Jul 03 15:33:16 ns01 named[25810]: automatic empty zone: view default: HOME.ARPA
+Jul 03 15:33:16 ns01 named[25810]: none:104: 'max-cache-size 90%' - setting to 211MB (out of 235MB)
+Jul 03 15:33:16 ns01 named[25810]: command channel listening on 192.168.50.10#953
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/view1: journal file is out of date: removing journal file
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/view1: loaded serial 16
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/default: journal file is out of date: removing journal file
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/default: loaded serial 16
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:33:16 UTC; 9s ago
+  Process: 25795 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25808 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25806 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25810 (named)
+   CGroup: /system.slice/named.service
+           └─25810 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:33:16 ns01 named[25810]: automatic empty zone: view default: B.E.F.IP6.ARPA
+Jul 03 15:33:16 ns01 named[25810]: automatic empty zone: view default: 8.B.D.0.1.0.0.2.IP6.ARPA
+Jul 03 15:33:16 ns01 named[25810]: automatic empty zone: view default: EMPTY.AS112.ARPA
+Jul 03 15:33:16 ns01 named[25810]: automatic empty zone: view default: HOME.ARPA
+Jul 03 15:33:16 ns01 named[25810]: none:104: 'max-cache-size 90%' - setting to 211MB (out of 235MB)
+Jul 03 15:33:16 ns01 named[25810]: command channel listening on 192.168.50.10#953
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/view1: journal file is out of date: removing journal file
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/view1: loaded serial 16
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/default: journal file is out of date: removing journal file
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/default: loaded serial 16
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:33:16 UTC; 35s ago
+  Process: 25795 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25808 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25806 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25810 (named)
+   CGroup: /system.slice/named.service
+           └─25810 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:33:16 ns01 named[25810]: none:104: 'max-cache-size 90%' - setting to 211MB (out of 235MB)
+Jul 03 15:33:16 ns01 named[25810]: command channel listening on 192.168.50.10#953
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/view1: journal file is out of date: removing journal file
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/view1: loaded serial 16
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/default: journal file is out of date: removing journal file
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/default: loaded serial 16
+Jul 03 15:33:49 ns01 named[25810]: client @0x7f8f9803c3e0 192.168.50.15#63099/key zonetransfer.key: view view1: signer "zonetransfer.key" approved
+Jul 03 15:33:49 ns01 named[25810]: client @0x7f8f9803c3e0 192.168.50.15#63099/key zonetransfer.key: view view1: updating zone 'ddns.lab/IN': adding an RR at 'www.ddns.lab' A 192.168.50.15
+Jul 03 15:33:49 ns01 named[25810]: /etc/named/dynamic/named.ddns.lab.view1.jnl: create: permission denied
+Jul 03 15:33:49 ns01 named[25810]: client @0x7f8f9803c3e0 192.168.50.15#63099/key zonetransfer.key: view view1: updating zone 'ddns.lab/IN': error: journal open failed: unexpected error
+[root@ns01 vagrant]# ls -Z /etc/named/dynamic/
+-rwxrwxrwx. root named system_u:object_r:etc_t:s0       named.ddns.lab
+-rwxrwxrwx. root named system_u:object_r:etc_t:s0       named.ddns.lab.view1
+[root@ns01 vagrant]# ls -Z /etc/named/
+drwxrwxrwx. root named unconfined_u:object_r:etc_t:s0   dynamic
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.50.168.192.rev
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.dns.lab.view1
+-rw-rw----. root named system_u:object_r:etc_t:s0       named.newdns.lab
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:33:16 UTC; 1min 33s ago
+  Process: 25795 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25808 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25806 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25810 (named)
+   CGroup: /system.slice/named.service
+           └─25810 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:33:16 ns01 named[25810]: none:104: 'max-cache-size 90%' - setting to 211MB (out of 235MB)
+Jul 03 15:33:16 ns01 named[25810]: command channel listening on 192.168.50.10#953
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/view1: journal file is out of date: removing journal file
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/view1: loaded serial 16
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/default: journal file is out of date: removing journal file
+Jul 03 15:33:16 ns01 named[25810]: managed-keys-zone/default: loaded serial 16
+Jul 03 15:33:49 ns01 named[25810]: client @0x7f8f9803c3e0 192.168.50.15#63099/key zonetransfer.key: view view1: signer "zonetransfer.key" approved
+Jul 03 15:33:49 ns01 named[25810]: client @0x7f8f9803c3e0 192.168.50.15#63099/key zonetransfer.key: view view1: updating zone 'ddns.lab/IN': adding an RR at 'www.ddns.lab' A 192.168.50.15
+Jul 03 15:33:49 ns01 named[25810]: /etc/named/dynamic/named.ddns.lab.view1.jnl: create: permission denied
+Jul 03 15:33:49 ns01 named[25810]: client @0x7f8f9803c3e0 192.168.50.15#63099/key zonetransfer.key: view view1: updating zone 'ddns.lab/IN': error: journal open failed: unexpected error
+[root@ns01 vagrant]# restorecon -v '/etc/named/dynamic/named.ddns.lab.view1.jnl'
+restorecon:  lstat(/etc/named/dynamic/named.ddns.lab.view1.jnl) failed:  No such file or directory
+[root@ns01 vagrant]# audit2allow -M named_add --debug </var/log/audit/audit.log 
+******************** IMPORTANT ***********************
+To make this policy package active, execute:
+
+semodule -i named_add.pp
+
+[root@ns01 vagrant]# semodule -i named_add.pp
+[root@ns01 vagrant]# ausearch -c 'isc-worker0000' --raw | audit2allow -M my-iscworker0000
+******************** IMPORTANT ***********************
+To make this policy package active, execute:
+
+semodule -i my-iscworker0000.pp
+
+[root@ns01 vagrant]# semodule -i my-iscworker0000.pp
+[root@ns01 vagrant]# systemctl restart named[root@ns01 vagrant]# systemctl status named -l● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:39:24 UTC; 4s ago
+  Process: 25866 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25879 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25877 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25881 (named)
+   CGroup: /system.slice/named.service
+           └─25881 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 123.100.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 124.100.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 125.100.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 126.100.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 127.100.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 127.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 254.169.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 2.0.192.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 100.51.198.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 113.0.203.IN-ADDR.ARPA
+[root@ns01 vagrant]# systemctl status named -l
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2021-07-03 15:39:24 UTC; 1min 11s ago
+  Process: 25866 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 25879 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 25877 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 25881 (named)
+   CGroup: /system.slice/named.service
+           └─25881 /usr/sbin/named -u named -c /etc/named.conf
+
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 125.100.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 126.100.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 127.100.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 127.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 254.169.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 2.0.192.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 100.51.198.IN-ADDR.ARPA
+Jul 03 15:39:24 ns01 named[25881]: automatic empty zone: view default: 113.0.203.IN-ADDR.ARPA
+Jul 03 15:40:07 ns01 named[25881]: client @0x7f680c03c3e0 192.168.50.15#37421/key zonetransfer.key: view view1: signer "zonetransfer.key" approved
+Jul 03 15:40:07 ns01 named[25881]: client @0x7f680c03c3e0 192.168.50.15#37421/key zonetransfer.key: view view1: updating zone 'ddns.lab/IN': adding an RR at 'www.ddns.lab' A 192.168.50.15
+[root@ns01 vagrant]# 
