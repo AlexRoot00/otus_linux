@@ -1,4 +1,4 @@
-Будем собирать nginx с поддержкой openssl.
+Будем собирать nginx с поддержкой openssl.\
 Для создания своего rpm пакета.НУжно установить инструментарий.
 yum install -y redhat-lsb-core wget rpmdevtools rpm-build createrepo yum-utils vim gcc &&
 yum install -y openssl-devel
