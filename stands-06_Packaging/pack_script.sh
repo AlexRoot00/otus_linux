@@ -1,6 +1,11 @@
-yum install -y rpmdevtools  wget gcc pcre* apr* #rpm-build mock mock-rpmfusion-free
-wget https://mirror.linux-ia64.org/apache//httpd/httpd-2.4.46.tar.bz2
-tar -xvf httpd-2.4.46.tar.bz2 
-rm -rf httpd-2.4.46.tar.bz2
-cd ./httpd-2.4.46
-rpmdev-setuptree
+yum install -y redhat-lsb-core wget rpmdevtools rpm-build createrepo yum-utils vim gcc &&
+yum install -y openssl-devel && 
+cd /root/
+wget https://nginx.org/packages/centos/8/SRPMS/nginx-1.20.1-1.el8.ngx.src.rpm &&
+wget https://www.openssl.org/source/latest.tar.gz &&
+tar -xvf latest.tar.gz &&
+rpm -i nginx-1.20.1-1.el8.ngx.src.rpm &&
+cp /vagrant/SPECS/nginx.spec ./rpmbuild/SPECS/
+yum-builddep ./rpmbuild/SPECS/nginx.spec -y
+rpmbuild -bb ./rpmbuild/SPECS/nginx.spec
+yum install -y rpmbuild/RPMS/x86_64/nginx-1.20.1-1.el8.ngx.x86_64.rpm 

@@ -13,7 +13,5 @@ Vagrant.configure(2) do |config|
       nfss.vm.hostname = "packs"
       nfss.vm.provision "shell", path: "pack_script.sh"
     end
-
-    
   end
   
