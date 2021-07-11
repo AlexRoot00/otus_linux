@@ -31,8 +31,8 @@ gpgcheck=0
 enabled=1
 EOF
 cp otus.repo /etc/yum.repos.d/
-systemctl start nginx 
-systemctl status nginx
+sudo systemctl start nginx 
+sudo systemctl status nginx
 
 cp rpmbuild/RPMS/x86_64/nginx-1.20.1-1.el8.ngx.x86_64.rpm /usr/share/nginx/html/repo/
 createrepo /usr/share/nginx/html/repo/

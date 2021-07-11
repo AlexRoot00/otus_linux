@@ -1,0 +1,12 @@
+FROM alpine:latest
+RUN apk update
+RUN apk upgrade -l
+RUN apk add nginx
+RUN apk add curl
+RUN apk add lsof
+RUN mkdir /var/www/html
+WORKDIR ./data
+COPY /data/data2/default2.conf /etc/nginx/http.d/default.conf
+COPY /data/data2/index.html /var/www/html/index.html
+EXPOSE 8080/tcp
+CMD ["nginx"]
