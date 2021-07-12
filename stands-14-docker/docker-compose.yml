@@ -7,9 +7,9 @@ services:
     volumes:
       - ./data/data1/default2.conf:/etc/nginx/http.d/default.conf
       - ./data/data1/index.html:/var/www/html/index.html     
-    command: sh -c "nginx && curl localhost:8080"
+    command: nginx -c /etc/nginx/nginx.conf -g 'daemon off;'
     ports: 
-      - 8080:8081
+      - 8080:8080
 
 
 
