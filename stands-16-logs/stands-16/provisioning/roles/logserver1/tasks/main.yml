@@ -1,0 +1,144 @@
+---
+- name: Install journald services
+  yum:
+    name: systemd-journal-gateway
+    state: present
+
+- file:
+    path: /var/log/journal/remote
+    state: directory
+    owner: systemd-journal-remote
+    group: systemd-journal-remote
+    mode: 0775
+
+- name: Add journald.upload.conf
+  template:
+    src=templates/systemd-journal-remote.service
+    dest=/lib/systemd/system/systemd-journal-remote.service
+
+- name: Check systemd-journal-remote
+  systemd:
+    state: restarted
+    name: systemd-journal-remote
+
+- name: Install Java
+  yum:
+    name: java-1.8.0-openjdk
+    state: present
+
+- name: Add Elasticsearch repo
+  yum_repository:
+    name: elasticsearch-7.x
+    description: Elasticsearch repository for 7.x packages
+    baseurl: https://artifacts.elastic.co/packages/7.x/yum
+    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    gpgcheck: yes
+    enabled: true
+
+- name: Install Elasticsearch package
+  yum:
+    name: elasticsearch
+    state: present
+
+- name: Check elasticsearch.service
+  systemd:
+    state: started
+    name: elasticsearch
+    enabled: yes
+
+- name: Install filebeat
+  yum:
+    name: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.6.0-x86_64.rpm
+    state: present
+
+- name: Ensure that Filebeat is configured properly
+  template:
+    src: filebeat.yml.j2
+    dest: /etc/filebeat/filebeat.yml
+
+- name: Check filebeat.service
+  systemd:
+    state: started
+    name: filebeat
+    enabled: yes
+
+- name: Install Kibana package
+  yum:
+    name: kibana
+    state: present
+
+- name: Ensure that Kibana is configured properly
+  template:
+    src: kibana.yml.j2
+    dest: /etc/kibana/kibana.yml
+
+- name: Check kibana.service
+  systemd:
+    state: started
+    name: kibana
+    enabled: yes
+
+- name: Install Logstash
+  yum:
+    name: logstash
+    state: present
+
+- file:
+    path: /etc/logstash/patterns
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+
+- name: Ensure that Logstash is configured properly
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop:
+    - { src: 'logstash/02-beats-input.conf.j2', dest: '/etc/logstash/conf.d/02-beats-input.conf' }
+    - { src: 'logstash/11-nginx-filter.conf.j2', dest: '/etc/logstash/conf.d/11-nginx-filter.conf' }
+    - { src: 'logstash/12-nginx-error-filter.conf.j2', dest: '/etc/logstash/conf.d/12-nginx-error-filter.conf' }
+    - { src: 'logstash/13-secure-output.conf.j2', dest: '/etc/logstash/conf.d/13-secure-output.conf' }
+    - { src: 'logstash/14-mysql-output.conf.j2', dest: '/etc/logstash/conf.d/14-mysql-output.conf' }
+    - { src: 'logstash/15-php-output.conf.j2', dest: '/etc/logstash/conf.d/15-php-output.conf' }
+    - { src: 'logstash/17-rsyslog-output.conf.j2', dest: '/etc/logstash/conf.d/17-rsyslog-output.conf' }
+    - { src: 'logstash/18-packetbeat-output.conf.j2', dest: '/etc/logstash/conf.d/18-packetbeat-output.conf' }
+    - { src: 'logstash/19-journalbeat-output.conf.j2', dest: '/etc/logstash/conf.d/19-journalbeat-output.conf' }
+    - { src: 'logstash/patterns/nginx.j2', dest: '/etc/logstash/patterns/nginx' }
+    - { src: 'logstash/patterns/nginx-error.j2', dest: '/etc/logstash/patterns/nginx-error' }
+
+- name: Check logstash.service
+  systemd:
+    state: started
+    name: logstash
+    enabled: yes
+
+- name: Create packetbeat template file
+  template:
+    src: packetbeat.template.json
+    dest: /root/packetbeat.template.json
+
+- name: Install packetbeat template
+  shell: "curl -XPUT -H 'Content-Type: application/json' http://localhost:9200/_template/packetbeat-7.6.0 -d@/root/packetbeat.template.json"
+
+- name: Install metricbeat
+  yum:
+    name: https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-7.6.0-x86_64.rpm
+    state: present
+
+- name: Check metricbeat.service
+  systemd:
+    state: started
+    name: metricbeat
+    enabled: yes
+
+- name: Install auditbeat
+  yum:
+    name: https://artifacts.elastic.co/downloads/beats/auditbeat/auditbeat-7.6.0-x86_64.rpm
+    state: present
+
+- name: Check auditbeat.service
+  systemd:
+    state: started
+    name: auditbeat
+    enabled: yes

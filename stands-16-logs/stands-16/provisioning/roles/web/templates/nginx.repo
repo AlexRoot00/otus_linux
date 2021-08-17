@@ -1,0 +1,6 @@
+[nginx]
+name=Nginx Official Repository
+enabled=1
+baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+gpgcheck=0
+

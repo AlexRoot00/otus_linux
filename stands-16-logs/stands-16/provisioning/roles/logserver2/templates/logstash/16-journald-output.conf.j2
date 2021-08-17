@@ -1,0 +1,19 @@
+input {
+    journald {
+      lowercase => true
+      seekto => "head"
+      thisboot => true
+      type => "system"
+      tags => ["journald"]
+    }
+}
+
+output {
+    if [tag] == "journald" {
+        elasticsearch {
+        hosts => ["http://localhost:9200"]
+        index => "rsyslog-%{+YYYY.MM.dd}"
+        document_type => "%{[@metadata][type]}"
+        }
+    }
+}

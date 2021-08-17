@@ -1,0 +1,10 @@
+output {
+    if [fields][service] == "php" {
+        elasticsearch {
+        hosts => ["http://localhost:9200"]
+        index => "php-%{+YYYY.MM.dd}"
+        document_type => "%{[@metadata][type]}"
+        }
+    }
+}
+

@@ -1,0 +1,25 @@
+filter {
+  if [fields][service] == "nginx-access" {
+    grok {
+      patterns_dir => ["/etc/logstash/patterns"]
+      patterns_files_glob => "*"
+      match => { "message" => "%{NGINXACCESS}" }
+    }
+    geoip {
+         source => "remote_ip"
+         target => "geoip"
+         add_tag => [ "nginx-geoip" ]
+  }
+  }
+}
+
+output {
+    if [fields][service] == "nginx-access" {
+        elasticsearch {
+        hosts => ["http://localhost:9200"]
+        index => "nginx-%{+YYYY.MM.dd}"
+        document_type => "%{[@metadata][type]}"
+        }
+    }
+}
+

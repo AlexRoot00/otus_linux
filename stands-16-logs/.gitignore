@@ -1,0 +1,4 @@
+.vagrant
+production/inventory
+production/group_vars/all
+site.retry

@@ -1,0 +1,60 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "centos/7"
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "provisioning/elk-lab.yml"
+    ansible.become = "true"
+  end
+
+  config.vm.define "logserver1" do |main|
+    main.vm.hostname = "logserver1"
+    main.vm.network "private_network", ip: "10.100.100.50", adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "elk-lab"
+    main.vm.network "private_network", ip: "172.16.200.20"
+    main.vm.provider :virtualbox do |vb|
+      vb.name = "logserver1"
+      vb.memory = 4096
+      vb.cpus = 2
+    end
+    main.vm.provision "shell", run: "always", inline: <<-SHELL
+    echo 172.16.200.20 logserver1 >> /etc/hosts
+    echo 172.16.200.21 logserver2 >> /etc/hosts
+    echo 10.100.100.20 web >> /etc/hosts
+
+    SHELL
+  end
+
+  config.vm.define "logserver2" do |main2|
+    main2.vm.hostname = "logserver2"
+    main2.vm.network "private_network", ip: "10.100.100.51", adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "elk-lab"
+    main2.vm.network "private_network", ip: "172.16.200.21"
+    main2.vm.provider :virtualbox do |vb|
+      vb.name = "logserver2"
+      vb.memory = 4096
+      vb.cpus = 2
+    end
+    main2.vm.provision "shell", run: "always", inline: <<-SHELL
+    echo 172.16.200.20 logserver1 >> /etc/hosts
+    echo 172.16.200.21 logserver2 >> /etc/hosts
+    echo 10.100.100.20 web >> /etc/hosts
+    SHELL
+  end
+
+  config.vm.define "web" do |web|
+    web.vm.hostname = "web"
+    web.vm.network "private_network", ip: "10.100.100.20", adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "elk-lab"
+    web.vm.provider :virtualbox do |vb|
+      vb.name = "web"
+      vb.memory = 512
+      vb.cpus = 1
+    end
+    web.vm.provision "shell", run: "always", inline: <<-SHELL
+    echo 172.16.200.20 logserver1 >> /etc/hosts
+    echo 172.16.200.21 logserver2 >> /etc/hosts
+    echo 10.100.100.20 web >> /etc/hosts
+    SHELL
+  end
+
+end

@@ -1,0 +1,22 @@
+---
+###
+- hosts: all
+  become: true
+  roles:
+    - utility
+
+- hosts: logserver1
+  become: true
+  roles:
+    - logserver1
+
+- hosts: logserver2
+  become: true
+  roles:
+    - logserver1
+
+- hosts: web
+  become: true
+  roles:
+    - web
+

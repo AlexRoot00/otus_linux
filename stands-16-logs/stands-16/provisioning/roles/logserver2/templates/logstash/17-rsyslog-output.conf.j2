@@ -1,0 +1,17 @@
+input {
+    udp {
+        host => "172.16.20.21"
+        port => 10514
+        codec => "json"
+        type => "rsyslog"
+        }
+}
+
+output {
+    if [type] == "rsyslog" {
+        elasticsearch {
+        hosts => ["http://localhost:9200"]
+        index => "rsyslog-%{+YYYY.MM.dd}"
+        }
+    }
+}

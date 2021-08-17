@@ -1,0 +1,41 @@
+---
+# tasks file for utility
+- name: Installing epel-release
+  yum:
+    name: epel-release
+    state: latest
+
+- name: 'Installing base utilities: tcpdump, traceroute, telnet, vim, htop'
+  yum:
+    name: ['tcpdump', 'traceroute', 'telnet', 'vim', 'htop', 'nmap', 'net-tools', 'mtr', 'mc', 'iperf3']
+    state: latest
+
+- file:
+    path: /root/.config/mc
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+
+- file:
+    path: /home/vagrant/.config/mc
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+
+- name: /root/.config/mc/ini
+  template:
+    src: templates/mc/ini
+    dest: /root/.config/mc/ini
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: /home/vagrant/.config/mc/ini
+  template:
+    src: templates/mc/ini
+    dest: /home/vagrant/.config/mc/ini
+    owner: root
+    group: root
+    mode: '0644'

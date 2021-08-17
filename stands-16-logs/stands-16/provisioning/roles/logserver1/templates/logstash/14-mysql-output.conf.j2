@@ -1,0 +1,9 @@
+output {
+    if [fields][service] == "mysql" {
+        elasticsearch {
+        hosts => ["http://localhost:9200"]
+        index => "mysql-%{+YYYY.MM.dd}"
+        document_type => "%{[@metadata][type]}"
+        }
+    }
+}

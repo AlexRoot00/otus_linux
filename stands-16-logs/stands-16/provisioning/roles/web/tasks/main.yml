@@ -1,0 +1,190 @@
+---
+### Установка репозитория Percona
+- name: Install Percona repository
+  yum:
+    name: https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+    state: present
+
+### Установка Percona-Server и сопутствующих пакетов
+- name: Install Percona-Server
+  yum:
+    name: Percona-Server-server-57
+    state: present
+
+- name: Install Percona-Server-client
+  yum:
+    name: Percona-Server-client-57
+    state: present
+
+- name: Install Percona-Server-shared
+  yum:
+    name: Percona-Server-shared-57
+    state: present
+
+- name: Install percona-xtrabackup-24
+  yum:
+    name: percona-xtrabackup-24
+    state: latest
+
+- name: Add Percona mysqld.cnf
+  template:
+    src=roles/web/templates/etc/percona-server.conf.d/mysqld.cnf
+    dest=/etc/percona-server.conf.d/mysqld.cnf
+
+- name: Add Percona my.cnf
+  template:
+    src=roles/web/templates/etc/my.cnf
+    dest=/etc/my.cnf
+
+### Запуск и включение сервиса mysql в автозагрузку
+- name: Check mysqld.service
+  systemd:
+    state: started
+    name: mysql
+    enabled: yes
+
+- name: Config .my.cnf for user root
+  template:
+    src: templates/root/.my.cnf
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: '0600'
+
+### Установка репозитория nginx
+- name: Add nginx repository
+  template:
+    src=roles/web/templates/nginx.repo
+    dest=/etc/yum.repos.d/nginx.repo
+
+### Установка пакета nginx
+- name: 'Installing nginx'
+  yum:
+    name: nginx
+    state: latest
+
+- name: Add nginx configs
+  template:
+    src=roles/web/templates/etc/nginx/nginx.conf
+    dest=/etc/nginx/nginx.conf
+
+- name: Add nginx conf.d default
+  template:
+    src=roles/web/templates/etc/nginx/conf.d/default.conf
+    dest=/etc/nginx/conf.d/default.conf
+
+### Запуск и включение сервиса nginx в автозагрузку
+- name: Check nginx.service
+  systemd:
+    state: started
+    name: nginx
+    enabled: yes
+
+### Установка репозитория REMI
+- name: Add REMI repository Centos
+  yum:
+    name: http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+    state: present
+
+### Устанавливаем PHP
+- name: 'Installing php'
+  yum:
+    name: ['php-fpm', 'php-cli', 'php-common']
+    state: latest
+
+### Запуск и включение сервиса php-fpm в автозагрузку
+- name: Check php-fpm.service
+  systemd:
+    state: started
+    name: php-fpm
+    enabled: yes
+
+- name: Install filebeat
+  yum:
+    name: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.6.0-x86_64.rpm
+    state: present
+
+- name: Ensure that Filebeat is configured properly
+  template:
+    src: filebeat.yml.j2
+    dest: /etc/filebeat/filebeat.yml
+
+- name: Check filebeat.service
+  systemd:
+    state: started
+    name: filebeat
+    enabled: yes
+
+- name: Install packetbeat
+  yum:
+    name: https://artifacts.elastic.co/downloads/beats/packetbeat/packetbeat-7.6.0-x86_64.rpm
+    state: present
+
+- name: Ensure that Packetbeat is configured properly
+  template:
+    src: packetbeat.yml
+    dest: /etc/packetbeat/packetbeat.yml
+
+- name: Check packetbeat.service
+  systemd:
+    state: started
+    name: packetbeat
+    enabled: yes
+
+- name: Install journalbeat
+  yum:
+    name: https://artifacts.elastic.co/downloads/beats/journalbeat/journalbeat-7.6.0-x86_64.rpm
+    state: present
+
+- name: Ensure that journalbeat is configured properly
+  template:
+    src: journalbeat.yml
+    dest: /etc/journalbeat/journalbeat.yml
+
+- name: Check journalbeat.service
+  systemd:
+    state: started
+    name: journalbeat
+    enabled: yes
+
+- name: Install metricbeat
+  yum:
+    name: https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-7.6.0-x86_64.rpm
+    state: present
+
+- name: metricbeat.yml
+  template:
+    src: templates/etc/metricbeat/metricbeat.yml
+    dest: /etc/metricbeat/metricbeat.yml
+
+- name: metricbeat nginx module config
+  template:
+    src: templates/etc/metricbeat/modules.d/nginx.yml
+    dest: /etc/metricbeat/modules.d/nginx.yml
+
+- name: metricbeat mysql module config
+  template:
+    src: templates/etc/metricbeat/modules.d/mysql.yml
+    dest: /etc/metricbeat/modules.d/mysql.yml
+
+- name: Check metricbeat.service
+  systemd:
+    state: started
+    name: metricbeat
+    enabled: yes
+
+- name: Install auditbeat
+  yum:
+    name: https://artifacts.elastic.co/downloads/beats/auditbeat/auditbeat-7.6.0-x86_64.rpm
+    state: present
+
+- name: auditbeat.yml
+  template:
+    src: templates/etc/auditbeat/auditbeat.yml
+    dest: /etc/auditbeat/auditbeat.yml
+
+- name: Check auditbeat.service
+  systemd:
+    state: started
+    name: auditbeat
+    enabled: yes
