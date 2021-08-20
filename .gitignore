@@ -14,7 +14,7 @@ stands-09-systemd/.vagrant/machines/systemd/virtualbox/action_set_name
 stands-09-systemd/.vagrant/machines/systemd/virtualbox/action_provision
 
 stands-06_Packaging/.vagrant/machines/packs/virtualbox/synced_folders
-
+stands-15-monitoring
 stands-06_Packaging/.vagrant/machines/packs/virtualbox/
 
 stands-06_Packaging/.vagrant/rgloader/loader.rb
