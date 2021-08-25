@@ -11,8 +11,8 @@ Install method: auto
 Use graphical install : text (bye bye graphic installer)
 
 user:vagrant
-
 password : Vagrant
+
 timezone : Asia/Vladivostok
 isntalled packages:
 minimal-environment
