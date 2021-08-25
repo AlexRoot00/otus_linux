@@ -1,0 +1,26 @@
+PXEClient:
+
+configured in ks.config:
+
+Mirror: https://mirror.yandex.ru/centos/8/BaseOS/x86_64/os/ (fast mirror)
+
+Used Centos Version: 8.0
+
+Install method: auto
+
+Use graphical install : text (bye bye graphic installer)
+
+user:vagrant
+
+password : Vagrant
+timezone : Asia/Vladivostok
+isntalled packages:
+minimal-environment
+kexec-tools
+vim
+wget
+yum-utils
+net-tools
+nfs-utils
+firewalld
+

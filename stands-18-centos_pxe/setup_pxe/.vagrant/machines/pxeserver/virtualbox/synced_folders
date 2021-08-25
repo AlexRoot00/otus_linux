@@ -1,0 +1,1 @@
+{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"/home/alexroot/Documents/vagrant/otus_linux/stands-18-centos_pxe/setup_pxe","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}
