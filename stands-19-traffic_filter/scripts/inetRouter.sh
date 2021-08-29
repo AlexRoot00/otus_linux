@@ -1,7 +1,7 @@
 yum install -y epel-release;
 yum install -y wget libpcap* iptables-services;
-wget http://li.nux.ro/download/nux/dextop/el7Server/x86_64/knock-server-0.7-2.el7.nux.x86_64.rpm -P /home/vagrant;
-yum localinstall -y /home/vagrant/knock-server-0.7-2.el7.nux.x86_64.rpm;
+yum install -y http://li.nux.ro/download/nux/dextop/el7Server/x86_64/knock-server-0.7-2.el7.nux.x86_64.rpm #-P /home/vagrant;
+#yum localinstall -y /home/vagrant/knock-server-0.7-2.el7.nux.x86_64.rpm;
 bash -c 'echo "net.ipv4.conf.all.forwarding=1" >> /etc/sysctl.conf';
 sysctl -p
 systemctl enable iptables && systemctl start iptables;

@@ -1,0 +1,94 @@
+Маршруты получаются следующими:
+
+[vagrant@router1 ~]$ ip route show
+default via 10.0.2.2 dev eth0 proto dhcp metric 100 
+10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 metric 100 
+172.20.10.0/24 dev eth1 proto kernel scope link src 172.20.10.1 metric 101 
+172.20.20.0/24 via 192.168.0.2 dev eth2 proto zebra metric 20 
+172.20.30.0/24 via 192.168.200.2 dev eth3 proto zebra metric 20 
+192.168.0.0/30 dev eth2 proto kernel scope link src 192.168.0.1 metric 102 
+192.168.100.0/30 proto zebra metric 20 
+        nexthop via 192.168.0.2 dev eth2 weight 1 
+        nexthop via 192.168.200.2 dev eth3 weight 1 
+192.168.200.0/30 dev eth3 proto kernel scope link src 192.168.200.1 metric 103 
+[vagrant@router1 ~]$ ip a | grep 172
+    inet 172.20.10.1/24 brd 172.20.10.255 scope global noprefixroute eth1
+[vagrant@router1 ~]$ tracepath -n 172.20.20.1
+ 1?: [LOCALHOST]                                         pmtu 1500
+ 1:  172.20.20.1                                           0.908ms reached
+ 1:  172.20.20.1                                           0.215ms reached
+     Resume: pmtu 1500 hops 1 back 1
+[vagrant@router2 ~]$ ip r s
+default via 10.0.2.2 dev eth0 proto dhcp metric 100 
+10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 metric 100 
+172.20.10.0/24 via 192.168.0.1 dev eth2 proto zebra metric 20 
+172.20.20.0/24 dev eth1 proto kernel scope link src 172.20.20.1 metric 101 
+172.20.30.0/24 via 192.168.100.1 dev eth3 proto zebra metric 20 
+192.168.0.0/30 dev eth2 proto kernel scope link src 192.168.0.2 metric 102 
+192.168.100.0/30 dev eth3 proto kernel scope link src 192.168.100.2 metric 103 
+192.168.200.0/30 proto zebra metric 20 
+        nexthop via 192.168.0.1 dev eth2 weight 1 
+        nexthop via 192.168.100.1 dev eth3 weight 1 
+[vagrant@router2 ~]$ ip a | grep 172
+    inet 172.20.20.1/24 brd 172.20.20.255 scope global noprefixroute eth1
+[vagrant@router2 ~]$ tracepath -n 172.20.20.1
+ 1:  172.20.20.1                                           0.044ms reached
+     Resume: pmtu 65535 hops 1 back 1 
+[vagrant@router3 ~]$ ip r s
+default via 10.0.2.2 dev eth0 proto dhcp metric 100 
+10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 metric 100 
+172.20.10.0/24 via 192.168.200.1 dev eth2 proto zebra metric 20 
+172.20.20.0/24 via 192.168.100.2 dev eth3 proto zebra metric 20 
+172.20.30.0/24 dev eth1 proto kernel scope link src 172.20.30.1 metric 101 
+192.168.0.0/30 proto zebra metric 20 
+        nexthop via 192.168.200.1 dev eth2 weight 1 
+        nexthop via 192.168.100.2 dev eth3 weight 1 
+192.168.100.0/30 dev eth3 proto kernel scope link src 192.168.100.1 metric 103 
+192.168.200.0/30 dev eth2 proto kernel scope link src 192.168.200.2 metric 102 
+[vagrant@router3 ~]$ ip a | grep 172
+    inet 172.20.30.1/24 brd 172.20.30.255 scope global noprefixroute eth1
+[vagrant@router3 ~]$ tracepath -n 172.20.20.1
+ 1?: [LOCALHOST]                                         pmtu 1500
+ 1:  172.20.20.1                                           0.414ms reached
+ 1:  172.20.20.1                                           0.264ms reached
+     Resume: pmtu 1500 hops 1 back 1
+Роутинг симметричный:
+[vagrant@router1 ~]$ ip a | grep 172
+    inet 172.20.10.1/24 brd 172.20.10.255 scope global noprefixroute eth1
+Поменяв вес пути в подсети 192.168.0.0/30, связывающей router1 и router2, для интерфейса 192.168.0.1 роутера router1, на , например, 1000, получим ассиметричный роутинг:
+[root@router1 vagrant]# vtysh
+
+Hello, this is Quagga (version 0.99.22.4).
+Copyright 1996-2005 Kunihiro Ishiguro, et al.
+
+router1# configure  terminal
+router1(config)# interface eth2
+router1(config-if)# ip ospf cost 1000
+router1(config-if)# exit
+router1(config)# exit
+router1# exit
+[root@router1 vagrant]# tracepath -n 172.20.20.1
+ 1?: [LOCALHOST]                                         pmtu 1500
+ 1:  192.168.200.2                                         0.817ms 
+ 1:  192.168.200.2                                         0.265ms 
+ 2:  172.20.20.1                                           0.546ms reached
+     Resume: pmtu 1500 hops 2 back 2
+Вернуть симметричность роутинга можно, например, повысив вес пути до 1000 в подсети 192.168.100.0/30 для интерфейса 192.168.100.1 роутера router3.
+[root@router3 vagrant]# vtysh
+
+Hello, this is Quagga (version 0.99.22.4).
+Copyright 1996-2005 Kunihiro Ishiguro, et al.
+
+router3# configure  terminal
+router3(config)# interface eth3
+router3(config-if)# ip ospf cost 1000
+router3(config-if)# exit
+router3(config)# exit
+router3# exit
+[root@router3 vagrant]# tracepath -n 172.20.20.1
+ 1?: [LOCALHOST]                                         pmtu 1500
+ 1:  172.20.20.1                                           0.432ms reached
+ 1:  172.20.20.1                                           0.258ms reached
+     Resume: pmtu 1500 hops 1 back 1
+
+ 
