@@ -1,0 +1,76 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+MACHINES = {
+ :ovpnServerOffice1tap => {
+        :box_name => "centos/8",
+        :net => [
+                   {ip: '192.168.11.150', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "vpn-nettap"},
+                ]
+  },
+ :ovpnServerOffice1tun => {
+    :box_name => "centos/8",
+    :net => [
+                   {ip: '192.168.10.150', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "vpn-nettun"},
+                ]
+  },
+:office1Computertun => {
+    :box_name => "centos/8",
+    :net => [
+                   {ip: '192.168.10.151', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "vpn-nettun"},
+                ]
+  },
+:office2Computertap => {
+    :box_name => "centos/8",
+    :net => [
+                   {ip: '192.168.11.151', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "vpn-nettap"},
+                ]
+  }, }
+Vagrant.configure("2") do |config|
+
+  MACHINES.each do |boxname, boxconfig|
+
+    config.vm.define boxname do |box|
+
+        box.vm.box = boxconfig[:box_name]
+        box.vm.host_name = boxname.to_s
+        config.vm.provider "virtualbox" do |v|
+          v.memory = 256
+        end
+        boxconfig[:net].each do |ipconf|
+          box.vm.network "private_network", ipconf
+        end
+        if boxconfig.key?(:public)
+          box.vm.network "public_network", boxconfig[:public]
+        end
+        box.vm.provision "shell", inline: <<-SHELL
+          mkdir -p ~root/.ssh
+                cp ~vagrant/.ssh/auth* ~root/.ssh
+        SHELL
+        case boxname.to_s
+        when "ovpnServerOffice1tap"
+          box.vm.provision "shell",
+          name: "ovpnServerOffice1tap",
+          path: "tap/server/server.sh"
+        when "ovpnServerOffice1tun"
+          box.vm.provision "shell",
+          name: "ovpnServerOffice1tun",
+          path: "tun/server/server.sh"
+        when "office2Computertun"
+          box.vm.provision "shell",
+          name: "office2Computertun",
+          path: "tun/client/client.sh"
+        when "office1Computertun"
+          box.vm.provision "shell",
+          name: "office1Computertun",
+          path: "tap/client/client.sh"
+        SHELL
+        
+        end
+
+      end
+
+  end
+  
+  
+end
+                

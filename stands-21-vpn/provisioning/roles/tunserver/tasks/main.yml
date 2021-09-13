@@ -1,0 +1,34 @@
+---
+- name: iptables -P INPUT ACCEPT
+  shell: 'iptables -P INPUT ACCEPT'
+- name: iptables -P FORWARD ACCEPT
+  shell: 'iptables -P FORWARD ACCEPT'
+- name: iptables -P OUTPUT ACCEPT
+  shell: 'iptables -P OUTPUT ACCEPT'
+- name: iptables -t nat -F
+  shell: 'iptables -t nat -F'
+- name: iptables -t mangle -F
+  shell: 'iptables -t mangle -F'
+- name:  iptables -F
+  shell: ' iptables -F'
+- name: iptables -X
+  shell: 'iptables -X'
+- name: iptables -A OUTPUT -p tcp -m tcp --dport 1194 -j ACCEPT 
+  shell: 'iptables -A OUTPUT -p tcp -m tcp --dport 1194 -j ACCEPT '
+- name: iptables -A OUTPUT -p udp -m udp --dport 1194 -j ACCEPT
+  shell: 'iptables -A OUTPUT -p udp -m udp --dport 1194 -j ACCEPT'
+- name: service iptables save
+  shell: 'service iptables save'
+- name: server.conf.j2
+  template:
+    src=roles/tunserver/templates/server.conf.j2
+    dest=/etc/openvpn/server.conf
+
+- name: Add static.key.j2
+  template:
+    src=roles/tunserver/templates/static.key.j2
+    dest=/etc/openvpn/static.key
+- name: openvpn --config /etc/openvpn/server.conf &
+  shell: 'openvpn --config /etc/openvpn/server.conf &'
+- name: iperf3 -s &
+  shell: 'iperf3 -s &'

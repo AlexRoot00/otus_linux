@@ -1,0 +1,71 @@
+---
+- name: systemctl stop firewalld
+  shell: 'systemctl stop firewalld && systemctl disable firewalld'
+- name: sysctl -p
+  shell: 'sysctl -p'
+- name: echo net.ipv4.conf.all.forwarding
+  shell: "echo 'net.ipv4.conf.all.forwarding=1'  >> /etc/sysctl.conf"
+- name: echo net.ipv4.ip_forward=1
+  shell: "echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf"
+- name: sysctl -p
+  shell: 'sysctl -p /etc/sysctl.conf'
+- name: systemctl restart network
+  shell: 'systemctl restart NetworkManager'
+- name: Installing easy-rsa
+  yum:
+    name: easy-rsa
+    state: latest
+- name: mkdir /etc/openvpn/easy-rsa
+  shell: 'mkdir /etc/openvpn/easy-rsa && chmod 750 /etc/openvpn/easy-rsa'
+
+- name:  cp -rf * /etc/openvpn/easy-rsa
+  shell: 'cd /usr/share/easy-rsa/3.0.8/ && cp -rf * /etc/openvpn/easy-rsa/'
+
+- name:  init-pki
+  shell: "cd /etc/openvpn/easy-rsa/ && echo 'yes' | /etc/openvpn/easy-rsa/easyrsa init-pki"
+
+- name: build-ca
+  shell: "cd /etc/openvpn/easy-rsa/ && echo 'server' | /etc/openvpn/easy-rsa/easyrsa build-ca nopass"
+- name: gen-dh
+  shell: 'cd /etc/openvpn/easy-rsa/ && /etc/openvpn/easy-rsa/easyrsa gen-dh'
+- name: gen-req server
+  shell: "cd /etc/openvpn/easy-rsa/ && echo 'server' |/etc/openvpn/easy-rsa/easyrsa gen-req server nopass"
+- name: sign-req server
+  shell: "cd /etc/openvpn/easy-rsa/ && echo 'yes' | /etc/openvpn/easy-rsa/easyrsa sign-req server server"
+- name: mkdir /etc/openvpn/keys/
+  shell: 'mkdir /etc/openvpn/keys/ && chmod 750 /etc/openvpn/keys'  
+- name: cp ca.crt 
+  shell: 'cd /etc/openvpn/easy-rsa/ && cp -a pki/ca.crt /etc/openvpn/keys/'  
+- name: cp dh.pem 
+  shell: 'cd /etc/openvpn/easy-rsa/ && cp -a pki/dh.pem /etc/openvpn/keys/dh2048.pem'  
+- name: cp server.crt 
+  shell: 'cd /etc/openvpn/easy-rsa/ && cp -a pki/issued/server.crt /etc/openvpn/keys/'  
+- name: cp -server.key 
+  shell: 'cd /etc/openvpn/easy-rsa/ && cp -a pki/private/server.key /etc/openvpn/keys/'  
+
+- name: gen-req client
+  shell: "cd /etc/openvpn/easy-rsa/ && echo 'client' | /etc/openvpn/easy-rsa/easyrsa gen-req client nopass"  
+- name: sign-req client
+  shell: "cd /etc/openvpn/easy-rsa/ && echo 'yes' | /etc/openvpn/easy-rsa/easyrsa sign-req client client"
+- name: cp client.crt 
+  shell: 'cp -a /etc/openvpn/easy-rsa/pki/issued/client.crt /etc/openvpn/keys/'  
+- name: cp client.key 
+  shell: 'cd /etc/openvpn/easy-rsa/ && cp -a pki/private/client.key /etc/openvpn/keys/'  
+
+- name: server.conf 
+  template:
+    src=roles/ras/templates/server.conf.j2
+    dest=/etc/openvpn/static.key
+
+- name: mkdir /etc/openvpn/ccd && mkdir /var/log/openvpn
+  shell: 'mkdir /etc/openvpn/ccd && mkdir /var/log/openvpn'  
+- name: cp pki/ca.crt /opt/ca.crt
+  shell: 'cd /etc/openvpn/easy-rsa/ && cp pki/ca.crt /opt/ca.crt'  
+- name: cp pki/issued/client.crt /opt/client.crt
+  shell: 'cd /etc/openvpn/easy-rsa/ && cp pki/issued/client.crt /opt/client.crt'  
+- name: cp /etc/openvpn/keys/client.key /opt/client.key
+  shell: 'cd /etc/openvpn/easy-rsa/ && cp pki/private/client.key /opt/client.key'  
+- name: cp /etc/openvpn/keys/dh2048.pem /opt/dh2048.pem
+  shell: 'cd /etc/openvpn/easy-rsa/ && cp pki/dh.pem /opt/dh2048.pem'  
+- name: chmod -R 0777 /opt/
+  shell: 'chmod -R 0777 /opt/'  

@@ -1,6 +1,3 @@
-# -*- mode: ruby -*-
-# vim: set ft=ruby :
-
 MACHINES = {
  :inetRouter => {
         :box_name => "centos/8",

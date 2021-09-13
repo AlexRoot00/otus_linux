@@ -1,0 +1,15 @@
+---
+- name: client config
+  template:
+    src=roles/tapclient/templates/client.conf.j2
+    dest=/etc/openvpn/client.conf
+- name: statickey
+  template:
+    src=roles/tapclient/templates/static.key.j2
+    dest=/etc/openvpn/static.key
+
+- name: starting openvpn
+  shell: "openvpn --config /etc/openvpn/client.conf &"
+  
+- name: starting iperf
+  shell: "iperf3 -c 10.11.12.1 -t 40 -i 5 >> statistic.log &"

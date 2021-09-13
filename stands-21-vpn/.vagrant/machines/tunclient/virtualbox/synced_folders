@@ -1,0 +1,1 @@
+{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"/home/alexroot/Documents/vagrant/otus_linux/stands-21-vpn","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}

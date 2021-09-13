@@ -1,0 +1,60 @@
+# -*- mode: ruby -*-
+Vagrant.configure(2) do |config|
+    config.vm.box = "centos/8"
+  
+    config.vm.provision "ansible" do |ansible|
+      ansible.playbook = "provisioning/vpn.yml"
+      ansible.become = "true"
+    end
+    
+    config.vm.define "tapserver" do |tapserver|
+      tapserver.vm.hostname = "tapserver"
+      tapserver.vm.network "private_network", ip: "192.168.11.150", adapter: 2, 
+      netmask: "255.255.255.0", virtualbox__intnet: "vpn-nettap"
+
+      tapserver.vm.provider :virtualbox do |vb|
+        vb.name = "tapserver"
+        vb.memory = 4096
+        vb.cpus = 2
+      end
+    end
+    config.vm.define "tunserver" do |tunserver|
+      tunserver.vm.hostname = "tunserver"
+      tunserver.vm.network "private_network", ip: "192.168.10.150", adapter: 2,
+       netmask: "255.255.255.0", virtualbox__intnet: "vpn-nettun"
+      tunserver.vm.provider :virtualbox do |vb|
+        vb.name = "tunserver"
+        vb.memory = 4096
+        vb.cpus = 2
+      end
+    end
+    config.vm.define "tunclient" do |tunclient|
+      tunclient.vm.hostname = "tunclient"
+      tunclient.vm.network "private_network", ip: "192.168.10.151", adapter: 2,
+       netmask: "255.255.255.0", virtualbox__intnet: "vpn-nettun"
+      tunclient.vm.provider :virtualbox do |vb|
+        vb.name = "tunclient"
+        vb.memory = 512
+        vb.cpus = 1
+      end
+    end
+    config.vm.define "tapclient" do |tapclient|
+      tapclient.vm.hostname = "tapclient"
+      tapclient.vm.network "private_network", ip: "192.168.11.151", adapter: 2,
+       netmask: "255.255.255.0", virtualbox__intnet: "vpn-nettap"
+      tapclient.vm.provider :virtualbox do |vb|
+        vb.name = "tapclient"
+        vb.memory = 512
+        vb.cpus = 1
+      end
+    end
+    config.vm.define "ras" do |ras|
+      ras.vm.hostname = "ras"
+      ras.vm.network "forwarded_port", guest: 1194, host: 1194, host_ip: "127.0.0.1"
+      ras.vm.provider :virtualbox do |vb|
+        vb.name = "ras"
+        vb.memory = 512
+        vb.cpus = 1
+      end
+  end
+end

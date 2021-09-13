@@ -1,0 +1,30 @@
+---
+###
+- hosts: all
+  become: true
+  roles:
+    - all
+
+- hosts: tapserver
+  become: true
+  roles:
+    - tapserver
+
+- hosts: tunserver
+  become: true
+  roles:
+    - tunserver
+
+- hosts: tapclient
+  become: true
+  roles:
+    - tapclient
+
+- hosts: tunclient
+  become: true
+  roles:
+    - tunclient
+- hosts: ras
+  become: true
+  roles:
+    - ras

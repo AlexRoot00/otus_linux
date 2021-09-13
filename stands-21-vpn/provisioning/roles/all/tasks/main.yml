@@ -1,0 +1,15 @@
+---
+- name: Installing epel-release
+  yum:
+    name: epel-release
+    state: latest
+- name: 'yum install -y openvpn iperf3 iptables-services'
+  yum:
+    name: ['openvpn','iperf3', 'iptables-services']
+    state: latest
+- name: setenforce 0"
+  shell: 'setenforce 0'
+- name: enforcing disabled
+  shell: "sed -i 's/=enforcing/=disabled/g' /etc/selinux/config"
+- name: systemctl enable iptables
+  shell: 'systemctl --now enable iptables'
