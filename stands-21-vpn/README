@@ -132,10 +132,10 @@ broadcast-трафик обычно не передаётся;
 
 вытащить с сервера ключи
 #без папки client не создалось, пришлось предварительно её ручками запилить
-vagrant ssh -c 'cat /opt/ca.crt' > /home/client/ca.crt
-vagrant ssh -c 'cat /opt/client.crt' > /home/client/client.crt
-vagrant ssh -c 'cat /opt/client.key' > /home/client/client.key
-vagrant ssh -c 'cat /opt/dh2048.pem' > /home/client/dh2048.pem
+vagrant ssh ras -c 'cat /opt/ca.crt' > /home/client/ca.crt
+vagrant ssh ras -c 'cat /opt/client.crt' > /home/$USER/client.crt
+vagrant ssh ras -c 'cat /opt/client.key' > /home/$USER/client.key
+vagrant ssh ras -c 'cat /opt/dh2048.pem' > /home/$USER/dh2048.pem
 установить openvpn
 apt-get install openvpn easy-rsa -y
 перенести в папку с openvpn ключи и конфиг клиента
