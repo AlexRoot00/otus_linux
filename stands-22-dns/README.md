@@ -14,4 +14,4 @@ Host www.newdns.lab not found: 3(NXDOMAIN) \
 [vagrant@client2 ~]$ host web1.dns.lab \
 web1.dns.lab has address 192.168.50.15 \
 [vagrant@client2 ~]$ host web2.dns.lab \
-web2.dns.lab has address 192.168.50.16 \
+web2.dns.lab has address 192.168.50.16 
