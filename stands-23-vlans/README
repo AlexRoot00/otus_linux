@@ -1,0 +1,177 @@
+Строим бонды и вланы
+
+в Office1 в тестовой подсети появляется сервера \
+ с доп интерфесами и адресами в internal сети testLAN \
+
+testClient1 - 10.10.10.254 \
+testClient2 - 10.10.10.254 \
+testServer1- 10.10.10.1 \
+testServer2- 10.10.10.1 \
+равести вланами 
+testClient1 <-> testServer1 \
+testClient2 <-> testServer2 \
+
+между centralRouter и inetRouter "пробросить" 2 линка \
+(общая inernal сеть) и объединить их 
+в бонд проверить работу c отключением интерфейсов \
+
+
+bond из двух интерфейсов на машине centralRouter и inetRouter, параметры, \
+ которые использованы в конфигурационном файле интерфейса bond0: \
+mode=1 - определяет политику поведения объединенных интерфейсов. \
+1 - это политика активный-резервный. \
+miimon=100 - Устанавливает периодичность MII мониторинга в миллисекундах. \
+Фактически монитринг будет осуществляться 10 раз в секунду (1с = 1000 мс). \
+fail_over_mac=1 - Определяет как будут прописываться MAC адреса на объединенных интерфейсах \
+ в режиме active-backup при переключении интерфесов. \
+Источник информации :
+http://www.adminia.ru/linux-bonding-obiedinenie-setevyih-interfeysov-v-linux/  \
+Интерфейсы имеют разные MAC адреса. Bond интерфейс использует MAC адрес того интерфейса, который в данный момент Active. \
+
+Входим на testServer1 \
+
+[vagrant@testServer1 ~]$  sudo su  \
+[root@testServer1 vagrant]# ip -c a show eth1.100 \ 
+4: eth1.100@eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000 \
+    link/ether 08:00:27:42:a4:e3 brd ff:ff:ff:ff:ff:ff \
+    inet 10.10.10.1/24 brd 10.10.10.255 scope global noprefixroute eth1.100 \
+       valid_lft forever preferred_lft forever \
+    inet6 fe80::a00:27ff:fe42:a4e3/64 scope link \ 
+       valid_lft forever preferred_lft forever \
+[root@testServer1 vagrant]# ip neigh \
+10.10.10.254 dev eth1.100 lladdr 08:00:27:da:ac:ae REACHABLE \
+10.0.2.2 dev eth0 lladdr 52:54:00:12:35:02 DELAY \
+10.0.2.3 dev eth0 lladdr 52:54:00:12:35:03 STALE \
+[root@testServer1 vagrant]#  \
+
+Входим на testClient1 \
+
+[root@testClient1 vagrant]# ip -c a show eth1.100 \
+4: eth1.100@eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000 \
+    link/ether 08:00:27:86:82:80 brd ff:ff:ff:ff:ff:ff \
+    inet 10.10.10.2/24 brd 10.10.10.255 scope global noprefixroute eth1.100 \
+       valid_lft forever preferred_lft forever \
+    inet6 fe80::a00:27ff:fe86:8280/64 scope link \ 
+       valid_lft forever preferred_lft forever \
+[root@testClient1 vagrant]# ping -c 5 10.10.10.1 \
+PING 10.10.10.1 (10.10.10.1) 56(84) bytes of data. \
+64 bytes from 10.10.10.1: icmp_seq=1 ttl=64 time=1.26 ms \
+64 bytes from 10.10.10.1: icmp_seq=2 ttl=64 time=0.792 ms \
+64 bytes from 10.10.10.1: icmp_seq=3 ttl=64 time=0.709 ms \
+64 bytes from 10.10.10.1: icmp_seq=4 ttl=64 time=0.361 ms \
+64 bytes from 10.10.10.1: icmp_seq=5 ttl=64 time=1.15 ms \
+
+--- 10.10.10.1 ping statistics --- \
+5 packets transmitted, 5 received, 0% packet loss, time 88ms \
+rtt min/avg/max/mdev = 0.361/0.852/1.256/0.322 ms \
+[root@testClient1 vagrant]# ip neigh \
+10.0.2.2 dev eth0 lladdr 52:54:00:12:35:02 DELAY \
+10.0.2.3 dev eth0 lladdr 52:54:00:12:35:03 STALEv
+10.10.10.254 dev eth1.100 lladdr 08:00:27:da:ac:ae REACHABLE \
+10.10.10.1 dev eth1.100 lladdr 08:00:27:42:a4:e3 STALE \
+[root@testClient1 vagrant]#  \
+----------------------------------------- \
+Bond \
+
+Смотрим inetRouter. \
+
+[vagrant@inetRouter ~]$ \ 
+[vagrant@inetRouter ~]$ sudo su \
+[root@inetRouter vagrant]# more /proc/net/bonding/bond0 \
+Ethernet Channel Bonding Driver: v3.7.1 (April 27, 2011) \
+
+Bonding Mode: fault-tolerance (active-backup) (fail_over_mac active) \
+Primary Slave: None \
+Currently Active Slave: eth1 \
+MII Status: up \
+MII Polling Interval (ms): 100 \
+Up Delay (ms): 0 \
+Down Delay (ms): 0 \
+Peer Notification Delay (ms): 0 \
+
+Slave Interface: eth1 \
+MII Status: up \
+Speed: 1000 Mbps \
+Duplex: full \
+Link Failure Count: 0 \
+Permanent HW addr: 08:00:27:f7:90:63 \
+Slave queue ID: 0 \
+
+Slave Interface: eth2 \
+MII Status: up \
+Speed: 1000 Mbps \
+Duplex: full \
+Link Failure Count: 0 \
+Permanent HW addr: 08:00:27:99:87:b5 \
+Slave queue ID: 0 \
+
+Смотрим centralRouter. \
+
+[vagrant@centralRouter ~]$ sudo su \
+[root@centralRouter vagrant]# more /proc/net/bonding/bond0 \
+Ethernet Channel Bonding Driver: v3.7.1 (April 27, 2011) \
+
+Bonding Mode: fault-tolerance (active-backup) (fail_over_mac active) \
+Primary Slave: None \
+Currently Active Slave: eth1 \
+MII Status: up \
+MII Polling Interval (ms): 100 \
+Up Delay (ms): 0 \
+Down Delay (ms): 0 \
+Peer Notification Delay (ms): 0 \
+
+Slave Interface: eth1 \
+MII Status: up \
+Speed: 1000 Mbps \
+Duplex: full \
+Link Failure Count: 0 \
+Permanent HW addr: 08:00:27:0f:18:cd \
+Slave queue ID: 0 \
+
+Slave Interface: eth2 \
+MII Status: up \
+Speed: 1000 Mbps \
+Duplex: full \
+Link Failure Count: 0 \
+Permanent HW addr: 08:00:27:0b:e2:f3 \
+Slave queue ID: 0 \
+
+Отключаем eth2. \
+[root@centralRouter vagrant]# ifdown eth2 \
+Connection 'eth2' successfully deactivated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/4) \
+Проверяем состояние \
+[root@centralRouter vagrant]# cat /proc/net/bonding/bond0 \
+Ethernet Channel Bonding Driver: v3.7.1 (April 27, 2011) \
+
+Bonding Mode: fault-tolerance (active-backup) (fail_over_mac active) \
+Primary Slave: None \
+Currently Active Slave: eth1 \
+MII Status: up \
+MII Polling Interval (ms): 100 \
+Up Delay (ms): 0 \
+Down Delay (ms): 0 \
+Peer Notification Delay (ms): 0 \
+
+Slave Interface: eth1 \
+MII Status: up \
+Speed: 1000 Mbps \
+Duplex: full \
+Link Failure Count: 0 \
+Permanent HW addr: 08:00:27:0f:18:cd \
+Slave queue ID: 0 \
+
+После этого на inetRouter проверяем пинг \
+
+
+[vagrant@inetRouter ~]$ sudo su \
+[root@inetRouter vagrant]# ping -c5 192.168.255.2 \
+PING 192.168.255.2 (192.168.255.2) 56(84) bytes of data. \
+64 bytes from 192.168.255.2: icmp_seq=1 ttl=64 time=0.945 ms \
+64 bytes from 192.168.255.2: icmp_seq=2 ttl=64 time=0.650 ms \
+64 bytes from 192.168.255.2: icmp_seq=3 ttl=64 time=0.730 ms \
+64 bytes from 192.168.255.2: icmp_seq=4 ttl=64 time=1.05 ms \
+64 bytes from 192.168.255.2: icmp_seq=5 ttl=64 time=0.527 ms \
+
+--- 192.168.255.2 ping statistics --- \
+5 packets transmitted, 5 received, 0% packet loss, time 92ms \
+rtt min/avg/max/mdev = 0.527/0.780/1.052/0.195 ms \

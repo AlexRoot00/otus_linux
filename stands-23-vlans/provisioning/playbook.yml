@@ -1,0 +1,44 @@
+---
+- hosts: inetRouter
+  name: bond for routers
+  become: yes
+  roles:
+    - role: bond
+- hosts: centralRouter
+  name: bond for routers
+  become: yes
+  roles:
+    - role: bond
+
+- hosts: testRouter1
+  name: vlan for tests
+  become: yes
+  roles:
+    - role: vlan
+
+- hosts: testRouter2
+  name: vlan for tests
+  become: yes
+  roles:
+    - role: vlan
+
+- hosts: testClient1
+  name: vlan for tests
+  become: yes
+  roles:
+    - role: vlan
+- hosts: testClient2
+  name: vlan for tests
+  become: yes
+  roles:
+    - role: vlan
+- hosts: testServer1
+  name: vlan for tests
+  become: yes
+  roles:
+    - role: vlan
+- hosts: testServer2
+  name: vlan for tests
+  become: yes
+  roles:
+    - role: vlan

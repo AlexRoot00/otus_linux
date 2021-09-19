@@ -1,0 +1,71 @@
+---
+- name: Add epel-release repo
+  yum:
+    name: epel-release
+    state: present
+
+- name: disable ssl for repo epel
+  lineinfile: 
+    dest: /etc/yum.repos.d/epel.repo
+    insertafter: 'enabled=1'
+    line: 'sslverify=0'
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: Add iptables
+  yum:
+    name: iptables-services
+    state: present
+  when: inventory_hostname == "inetRouter"
+
+- name: edit sysctl ip_forward
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+- name: daemon started
+  systemd:
+    name: iptables
+    state: started
+    enabled: yes
+  when: inventory_hostname == "inetRouter"
+
+- name: copy config
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - { src: 'files/inetRouter/ifcfg-eth0', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/inetRouter/ifcfg-eth1', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/inetRouter/ifcfg-eth2', dest: '/etc/sysconfig/network-scripts/' } 
+    - { src: 'files/inetRouter/ifcfg-bond0', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/inetRouter/route-bond0', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/inetRouter/iptables', dest: '/etc/sysconfig/' }
+  notify:
+  - restart server
+  when: inventory_hostname == "inetRouter"
+
+- name: copy config
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - { src: 'files/centralRouter/ifcfg-eth0', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/centralRouter/ifcfg-eth1', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/centralRouter/ifcfg-eth2', dest: '/etc/sysconfig/network-scripts/' } 
+    - { src: 'files/centralRouter/ifcfg-eth3', dest: '/etc/sysconfig/network-scripts/' } 
+    - { src: 'files/centralRouter/ifcfg-eth4', dest: '/etc/sysconfig/network-scripts/' } 
+    - { src: 'files/centralRouter/ifcfg-bond0', dest: '/etc/sysconfig/network-scripts/' }
+  notify:
+    - restart server
+  when: inventory_hostname == "centralRouter"

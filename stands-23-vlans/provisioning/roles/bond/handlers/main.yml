@@ -1,0 +1,4 @@
+---
+- name: restart server
+  reboot:
+    reboot_timeout: 120

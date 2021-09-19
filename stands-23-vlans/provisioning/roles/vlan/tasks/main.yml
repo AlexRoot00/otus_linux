@@ -1,0 +1,142 @@
+---
+- name: Add epel-release repo
+  yum:
+    name: epel-release
+    state: present
+
+- name: disable ssl for repo epel
+  lineinfile: 
+    dest: /etc/yum.repos.d/epel.repo
+    insertafter: 'enabled=1'
+    line: 'sslverify=0'
+
+- name: copy config
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - { src: 'files/testClient1/ifcfg-eth0', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/testClient1/ifcfg-vlan100', dest: '/etc/sysconfig/network-scripts/' }
+  notify:
+  - restart server
+  when: inventory_hostname == "testClient1"
+
+- name: copy config
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - { src: 'files/testClient2/ifcfg-eth0', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/testClient2/ifcfg-vlan200', dest: '/etc/sysconfig/network-scripts/' }
+  notify:
+    - restart server
+  when: inventory_hostname == "testClient2"
+
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  selinux:
+    policy: targeted
+    state: permissive
+  when: inventory_hostname == "testRouter1"
+
+
+- name: edit sysctl ip_forward
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+  when: inventory_hostname == "testRouter1"
+
+
+- name: Add iptables service
+  yum:
+    name: iptables-services
+    state: present
+  when: inventory_hostname == "testRouter1"
+
+- name: daemon started
+  systemd:
+    name: iptables
+    state: started
+    enabled: yes
+  when: inventory_hostname == "testRouter1"
+
+- name: copy config
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - { src: 'files/testRouter1/ifcfg-eth0', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/testRouter1/ifcfg-eth1', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/testRouter1/ifcfg-vlan100', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/testRouter1/iptables', dest: '/etc/sysconfig/' }
+  notify:
+  - restart server
+  when: inventory_hostname == "testRouter1"
+
+- name: Add iptables service
+  yum:
+    name: iptables-services
+    state: present
+  when: inventory_hostname == "testRouter2"
+
+- name: daemon started
+  systemd:
+    name: iptables
+    state: started
+    enabled: yes
+  when: inventory_hostname == "testRouter2"
+
+- name: copy config
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - { src: 'files/testRouter2/ifcfg-eth0', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/testRouter2/ifcfg-eth1', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/testRouter2/ifcfg-vlan200', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/testRouter2/iptables', dest: '/etc/sysconfig/' }
+  notify:
+  - restart server
+  when: inventory_hostname == "testRouter2"
+
+- name: copy config
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - { src: 'files/testServer1/ifcfg-eth0', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/testServer1/ifcfg-vlan100', dest: '/etc/sysconfig/network-scripts/' }
+  notify:
+  - restart server
+  when: inventory_hostname == "testServer1"
+
+- name: copy config
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root 
+    group: root
+    mode: '0755'
+  with_items:
+    - { src: 'files/testServer2/ifcfg-eth0', dest: '/etc/sysconfig/network-scripts/' }
+    - { src: 'files/testServer2/ifcfg-vlan200', dest: '/etc/sysconfig/network-scripts/' }
+  notify:
+    - restart server
+  when: inventory_hostname == "testServer2"
