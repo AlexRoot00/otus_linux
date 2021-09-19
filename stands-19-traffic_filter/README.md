@@ -8,7 +8,7 @@ guest: 8080, host: 1234, host_ip: "127.0.0.1", id: "nginx" (в Vagrantfile ) \
 sudo iptables -t nat -A PREROUTING -i eth0 -p tcp -m tcp --dport 8080 -j DNAT --to-destination 192.168.0.2:80 \
 sudo iptables -t nat -A POSTROUTING --destination 192.168.0.2/32 -j SNAT --to-source 192.168.255.2 \
 Для работы port knocking'a было установлен пакет knock-server-0.7-2.el7.nux.x86_64.rpm . \
-и был отредактирован конфиг(/etc/sysconfig/knockd): \
+и был отредактирован конфиг(/etc/sysconfig/knockd): 
 [options] \
 	UseSyslog \
 
