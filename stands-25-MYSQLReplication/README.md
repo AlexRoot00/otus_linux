@@ -14,14 +14,14 @@ mysql> show master status;\
 
 mysql> select * from bookmaker;
 +----+----------------+\
-| id | bookmaker_name |\
-+----+----------------+\
-|  4 | betway         |\
-|  5 | bwin           |\
-|  6 | ladbrokes      |\
-|  3 | unibet         |\
-+----+----------------+\
-4 rows in set (0.00 sec)\
+| id | bookmaker_name | \
++----+----------------+  \
+|  4 | betway         |  \
+|  5 | bwin           |  \
+|  6 | ladbrokes      |  \
+|  3 | unibet         |  \
++----+----------------+  \
+4 rows in set (0.00 sec) \
 
 mysql> insert into bookmaker(id,bookmaker_name) values (255,'this is my test text');
 Query OK, 1 row affected (0.00 sec)
