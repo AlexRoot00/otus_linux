@@ -99,8 +99,8 @@ mysql> show global variables like 'gtid_purged';\
 [root@slave vagrant]# mysqlbinlog /var/lib/mysql/mysql-bin.000001 \
 
 #211010 20:00:33 server id 1  end_log_pos 436 CRC32 0xce33e5f6  Query   thread_id=10    exec_time=0        error_code=0\
-use `bet`/*!*/;\
-SET TIMESTAMP=1633860033/*!*/;\
+use `bet`/*!*/; \
+SET TIMESTAMP=1633860033/*!*/; \
 insert into bookmaker(id,bookmaker_name) values (255,'this is my test text')\
 /*!*/;\
 # at 436 \
