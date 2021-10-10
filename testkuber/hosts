@@ -1,0 +1,13 @@
+
+[kubermaster1]
+kubermaster1 ansible_host=192.168.50.10 ansible_private_key_file=.vagrant/machines/kubermaster1/virtualbox/private_key
+[kubermaster2]
+kubermaster2 ansible_host=192.168.50.11 ansible_private_key_file=.vagrant/machines/kubermaster2/virtualbox/private_key
+[kubermaster3]
+kubermaster3 ansible_host=192.168.50.12 ansible_private_key_file=.vagrant/machines/kubermaster3/virtualbox/private_key
+[kuberworker1]
+kuberworker1 ansible_host=192.168.50.13 ansible_private_key_file=.vagrant/machines/kuberworker1/virtualbox/private_key
+[kuberworker2]
+kuberworker2 ansible_host=192.168.50.14 ansible_private_key_file=.vagrant/machines/kuberworker2/virtualbox/private_key
+[kuberworker3]
+kuberworker3 ansible_host=192.168.50.15 ansible_private_key_file=.vagrant/machines/kuberworker3/virtualbox/private_key          

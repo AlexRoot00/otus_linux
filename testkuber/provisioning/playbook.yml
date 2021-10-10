@@ -1,0 +1,36 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+  - name: Install packages epel-release
+    dnf:
+      name:
+        - epel-release 
+      state: present
+
+- hosts: kubermaster1
+  become: yes
+  roles:
+   - kubermaster1
+     
+- hosts: kubermaster2
+  become: yes
+  roles:
+   - kubermaster2
+- hosts: kubermaster3
+  become: yes
+  roles:
+   - kubermaster3
+- hosts: kuberworker1
+  become: yes
+  roles:
+   - kuberworker1
+- hosts: kuberworker2
+  become: yes
+  roles:
+   - kuberworker2
+- hosts: kuberworker3
+  become: yes
+  roles:
+   - kuberworker3

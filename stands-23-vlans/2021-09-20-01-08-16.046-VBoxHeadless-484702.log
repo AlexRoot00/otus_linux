@@ -1,0 +1,12 @@
+Log created: 2021-09-20T01:08:16.464091000Z
+Process ID:  484702 (0x7655e)
+Parent PID:  5350 (0x14e6)
+Executable:  /usr/lib/virtualbox/VBoxHeadless
+Arg[0]: /usr/lib/virtualbox/VBoxHeadless
+Arg[1]: --comment
+Arg[2]: stands-24-ldap_ipaServer_1632043067282_29422
+Arg[3]: --startvm
+Arg[4]: d9691fb4-fbbc-427d-857e-41591cbdbd85
+Arg[5]: --vrde
+Arg[6]: config
+AddRef: illegal refcnt=3221225469 state=2

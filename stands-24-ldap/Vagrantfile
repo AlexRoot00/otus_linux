@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+    config.vm.box = "centos/8"
+  
+    config.vm.provision "ansible" do |ansible|
+      ansible.verbose = "vvv"
+      ansible.playbook = "provisioning/playbook.yml"
+      ansible.become = "true"
+    end
+    config.vm.provider "virtualbox" do |v|
+        v.memory = 4096
+    end
+  
+    config.vm.define "ipaServer" do |ipaServer|
+      ipaServer.vm.network "private_network", ip: "192.168.50.10"
+      ipaServer.vm.hostname = "ipaServer"
+    end
+  
+    config.vm.define "ipaClient" do |ipaClient|
+      ipaClient.vm.network "private_network", ip: "192.168.50.11"
+      ipaClient.vm.hostname = "ipaClient"
+    end
+end

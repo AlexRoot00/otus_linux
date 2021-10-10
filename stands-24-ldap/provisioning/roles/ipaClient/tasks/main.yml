@@ -1,0 +1,27 @@
+---
+- name: Set hostname
+  hostname: 
+    name: ipaclient.otus.lan
+
+- name: create /etc/hosts from template
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+- name: ipa-server initial
+  shell: "dnf module enable idm:DL1"
+- name: ipa-server initial
+  shell: "dnf distro-sync"
+- name: install FreeIPA-Client 
+  yum: 
+    name: ["freeipa-client","freeipa-admintools"]
+    state: latest 
+
+
+- name: add client to domain
+  ignore_errors: True
+  register: result
+  shell: ipa-client-install --mkhomedir --force-ntpd --domain={{ domain }} --server={{ server }} --realm={{ realm }} --principal={{ admin }} --password={{ password }} --enable-dns-updates -U
+
+- name: try of connect to IPA-Server
+  when: result is failed
+  shell: hostnamectl set-hostname `hostname`.{{ domain }} && ipa-client-install -U --uninstall && ipa-client-install -U --mkhomedir --force-ntpd --domain={{ domain }} --server={{ server }} --realm={{ realm }} --principal={{ admin }} --password={{ password }}

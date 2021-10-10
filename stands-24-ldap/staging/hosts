@@ -1,0 +1,4 @@
+[server]
+ipaServer ansible_host=192.168.11.10 ansible_private_key_file=.vagrant/machines/ipaServer/virtualbox/private_key
+[client]
+ipaClient ansible_host=192.168.11.11 ansible_private_key_file=.vagrant/machines/ipaClient/virtualbox/private_key

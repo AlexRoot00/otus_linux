@@ -1,0 +1,112 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+   - name: Add epel-release repo
+     yum:
+      name: epel-release
+      state: present
+   - name: disable ssl for repo epel
+     lineinfile: 
+      dest: /etc/yum.repos.d/epel.repo
+      insertafter: 'enabled=1'
+      line: 'sslverify=0'
+   - name: install  Percona
+     shell:  yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm -y; yum install Percona-Server-server-57 sshpass -y
+   - name: Password yes with ssh
+     shell:  "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config"
+   - name: reload sshd
+     shell:  systemctl reload sshd
+   - name: Set timezone
+     shell:  timedatectl set-timezone Asia/Vladivostok      
+- hosts: master
+  become: yes
+  tasks:
+  - name: copy 01-base.cnf.j2
+    copy: 
+      src: files/master/01-base.cnf
+      dest: /etc/my.cnf.d/01-base.cnf
+      owner: root
+      group: root
+      mode: 0644
+  - name: copy 02-max-connections
+    copy: 
+      src: files/master/02-max-connections.cnf
+      dest: /etc/my.cnf.d/02-max-connections.cnf
+      owner: root
+      group: root
+      mode: 0644
+  - name: copy 03-performance
+    copy: 
+      src: files/master/03-performance.cnf
+      dest: /etc/my.cnf.d/03-performance.cnf
+      owner: root
+      group: root
+      mode: 0644
+  - name: copy 04-slow-query
+    copy: 
+      src: files/master/04-slow-query.cnf
+      dest: /etc/my.cnf.d/04-slow-query.cnf
+      owner: root
+      group: root
+      mode: 0644
+  - name: copy 05-binlog
+    copy: 
+      src: files/master/05-binlog.cnf
+      dest: /etc/my.cnf.d/05-binlog.cnf
+      owner: root
+      group: root
+      mode: 0644
+  - name: daemon started
+    systemd:
+      name: mysql
+      state: started
+      enabled: yes      
+  - name: run setupdb
+    shell: bash /vagrant/files/master/setupdb.sh
+
+- hosts: slave
+  become: yes
+  tasks:
+  - name: copy 01-base.cnf.j2
+    copy: 
+      src: files/slave/01-base.cnf
+      dest: /etc/my.cnf.d/01-base.cnf
+      owner: root
+      group: root
+      mode: 0644
+  - name: copy 02-max-connections
+    copy: 
+      src: files/slave/02-max-connections.cnf
+      dest: /etc/my.cnf.d/02-max-connections.cnf
+      owner: root
+      group: root
+      mode: 0644
+  - name: copy 03-performance
+    copy: 
+      src: files/slave/03-performance.cnf
+      dest: /etc/my.cnf.d/03-performance.cnf
+      owner: root
+      group: root
+      mode: 0644
+  - name: copy 04-slow-query
+    copy: 
+      src: files/slave/04-slow-query.cnf
+      dest: /etc/my.cnf.d/04-slow-query.cnf
+      owner: root
+      group: root
+      mode: 0644
+  - name: copy 05-binlog
+    copy: 
+      src: files/slave/05-binlog.cnf
+      dest: /etc/my.cnf.d/05-binlog.cnf
+      owner: root
+      group: root
+      mode: 0644
+  - name: daemon started
+    systemd:
+      name: mysql
+      state: started
+      enabled: yes      
+  - name: run setupdb
+    shell: bash /vagrant/files/slave/setupdb.sh

@@ -1,0 +1,42 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+    config.vm.box = "centos/8"
+  
+    config.vm.provision "ansible" do |ansible|
+      ansible.verbose = "vvv"
+      ansible.playbook = "provisioning/playbook.yml"
+      ansible.become = "true"
+    end
+    config.vm.provider "virtualbox" do |v|
+        v.memory = 4096
+    end
+  
+    config.vm.define "kubermaster1" do |kubermaster1|
+      kubermaster1.vm.network "private_network", ip: "192.168.50.10"
+      kubermaster1.vm.hostname = "kubermaster1"
+    end
+  
+    config.vm.define "kubermaster2" do |kubermaster2|
+      kubermaster2.vm.network "private_network", ip: "192.168.50.11"
+      kubermaster2.vm.hostname = "kubermaster2"
+    end
+    config.vm.define "kubermaster3" do |kubermaster3|
+      kubermaster3.vm.network "private_network", ip: "192.168.50.12"
+      kubermaster3.vm.hostname = "kubermaster3"
+    end
+    config.vm.define "kuberworker1" do |kuberworker1|
+      kuberworker1.vm.network "private_network", ip: "192.168.50.13"
+      kuberworker1.vm.hostname = "kuberworker1"
+    end
+    config.vm.define "kuberworker2" do |kuberworker2|
+      kuberworker2.vm.network "private_network", ip: "192.168.50.14"
+      kuberworker2.vm.hostname = "kuberworker2"
+    end
+
+    config.vm.define "kuberworker3" do |kuberworker3|
+      kuberworker3.vm.network "private_network", ip: "192.168.50.15"
+      kuberworker3.vm.hostname = "kuberworker3"
+    end
+end

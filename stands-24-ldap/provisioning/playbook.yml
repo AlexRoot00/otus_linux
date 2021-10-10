@@ -1,0 +1,11 @@
+---
+- hosts: ipaServer
+  become: true
+  roles:
+  - ipaServer  
+
+     
+- hosts: ipaClient
+  become: yes
+  roles:
+  - ipaClient  
