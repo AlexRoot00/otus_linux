@@ -1,5 +1,5 @@
 После поднятия виртуальных машин, выполним операции на мастере:
------------------------------
+
 [vagrant@master ~]$ mysql -u root -p'iw#kdBq9CMN' \
 mysql> USE bet  \
 Reading table information for completion of table and column names \
