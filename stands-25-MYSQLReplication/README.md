@@ -1,29 +1,15 @@
 [vagrant@master ~]$ mysql -u root -p'iw#kdBq9CMN'   
-mysql: [Warning] Using a password on the command line interface can be insecure.
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 13
-Server version: 5.7.35-38-log Percona Server (GPL), Release 38, Revision 3692a61
-
-Copyright (c) 2009-2021 Percona LLC and/or its affiliates
-Copyright (c) 2000, 2021, Oracle and/or its affiliates.
-
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
 mysql> USE bet
 Reading table information for completion of table and column names
 You can turn off this feature to get a quicker startup with -A
 
 Database changed
-mysql> show master status;
-+------------------+----------+--------------+------------------+-------------------------------------------+
-| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set                         |
-+------------------+----------+--------------+------------------+-------------------------------------------+
-| mysql-bin.000002 |   119562 |              |                  | 8d1c698f-29a7-11ec-ad4f-5254004d77d3:1-39 |
-+------------------+----------+--------------+------------------+-------------------------------------------+
+mysql> show master status;\
++------------------+----------+--------------+------------------+-------------------------------------------+\
+| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set                         |\
++------------------+----------+--------------+------------------+-------------------------------------------+\
+| mysql-bin.000002 |   119562 |              |                  | 8d1c698f-29a7-11ec-ad4f-5254004d77d3:1-39 |\
++------------------+----------+--------------+------------------+-------------------------------------------+\
 1 row in set (0.00 sec)
 
 mysql> select * from bookmaker;
