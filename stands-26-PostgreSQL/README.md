@@ -34,7 +34,7 @@ Type "help" for help.
 postgres=# \l  
 
 <img
-src=“images/SubPronouns.jpg”
+src=“table.jpg”
 raw=true
 alt=“Subject Pronouns”
 style=“margin-right: 10px;”
