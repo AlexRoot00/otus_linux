@@ -32,14 +32,7 @@ psql (11.13)\
 Type "help" for help.
 
 postgres=# \l  
-
-<img
-src=“skrin.png”
-raw=true
-alt=“Subject Pronouns”
-style=“margin-right: 10px;”
-/>
-
+смотрим вывод в skrin.png
 
 postgres=# exit
 [postgres@slave ~]$ exit
