@@ -28,11 +28,11 @@ vagrant ssh slave
 [vagrant@slave ~]$ sudo su
 [root@slave vagrant]# su - postgres
 [postgres@slave ~]$ psql
-psql (11.13)
+psql (11.13)\
 Type "help" for help.
 
-postgres=# \l
-                                  List of databases
+postgres=# \l  
+                                  List of databases \
 ===Name====|==Owner===| Encoding=|===Collate===|===Ctype:===:|:=:Access privileges===\
 -----------+----------+----------+-------------+-------------+----------------------- \
  postgres  | postgres | UTF8=====| en_US.UTF-8 | en_US.UTF-8 | ===================:\\
