@@ -1,4 +1,4 @@
-# на клиенте генерируем новый командой ssh-keygen -b 2048 -t rsa -f /root/.ssh/id_rsa -q -N "" -f rsa и копируем id_rsa.pub на сервер.
+ на клиенте генерируем новый командой ssh-keygen -b 2048 -t rsa -f /root/.ssh/id_rsa -q -N "" -f rsa и копируем id_rsa.pub на сервер.
 >[vagrant@borgclient ~]$ sudo su
 >[borg@borgclient vagrant]$ ssh-keygen -b 2048 -t rsa -f /root/.ssh/id_rsa -q -N ""
 >и копируем содержимое id_rsa.pub в /borg/.ssh/authorized_keys на сервере и >приводим его в похожий вид：
