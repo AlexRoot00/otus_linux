@@ -32,7 +32,7 @@
 > логи создаются при каждом снятии бекапа и их можно посмотреть в /var/log/backup
 > Можем посмотреть листинг бэкапа /opt/borglist.sh
 
-# Достать файл из резервной копии можно слeдующей командой
+ Достать файл из резервной копии можно слeдующей командой
 > borg extract borg@borgserver:/var/backup/borgclient::2021-10-30-17:36:13-borgclient etc/hostname
 > При запросе :
 > Enter passphrase for key /root/.config/borg/keys/borgserver__var_backup_borgclient:
