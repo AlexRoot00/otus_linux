@@ -1,0 +1,10 @@
+[Unit]
+Description=Logs some system statistics to the systemd journal
+Requires=borgcreate.service
+
+[Timer]
+Unit=borgcreate.service
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target

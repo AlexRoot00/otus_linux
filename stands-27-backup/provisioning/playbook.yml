@@ -1,0 +1,111 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  tasks:
+  - name: install epel-repo
+    shell: dnf install -y epel-release
+  - name: install powertools
+    shell: dnf config-manager --set-enabled powertools
+  - name: Put SELinux in permissive mode, logging actions that would be blocked.
+    selinux:
+      policy: targeted
+      state: permissive
+  - name: PasswordAuthentication yes
+    shell: sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+  - name: restart sshd
+    shell: systemctl restart sshd
+  - name: Timezome
+    shell: timedatectl  set-timezone Asia/Vladivostok 
+  - name: useradd borg
+    shell: useradd -m borg -p borgpassword0
+  - name: install borgbackup 
+    shell: dnf install borgbackup mdadm smartmontools hdparm gdisk -y 
+  - name: Add records to /etc/hosts
+    lineinfile:
+      path: /etc/hosts
+      state: present
+      line: |
+        192.168.1.10 borgserver
+        192.168.1.20 borgclient
+  - name: create ssh dir
+    file:
+      path: "/home/borg/.ssh "
+      state: directory
+      owner: root
+      group: root
+      mode: 700
+- hosts: borgserver
+  become: True
+  tasks:
+  - name: mkdir dir backup 
+    shell: mkdir /var/backup 
+  - name: add external storage
+    shell: mkfs.ext4 /dev/sdc   
+  - name: mount sdc to backup
+    shell: mount /dev/sdc /var/backup
+  - name: chown backup
+    shell: chown borg:borg /var/backup
+  - name: copy authorized_keys
+    copy: 
+      src: files/borgserver/{{ item }}
+      dest: /home/borg/.ssh/
+      mode: 0600
+      owner: borg
+      group: borg
+    with_items:
+    - authorized_keys
+  - name: reload sshdaemon
+    systemd:
+      name: sshd
+      state: restarted
+
+- hosts: borgclient
+  become: True
+  tasks:
+  - name: create ssh directory
+    file:
+      path: "/root/.ssh/ "
+      state: directory
+      owner: root
+      group: root
+  - name: create backup directory
+    file:
+      path: "/var/log/backup"
+      state: directory
+      owner: root
+      group: root
+  - name: copy ssh keys
+    copy: 
+      src: files/borgclient/{{ item }} 
+      dest: /root/.ssh/
+      mode: 0600
+      owner: root
+      group: root
+    with_items:
+      - id_rsa
+      - id_rsa.pub
+      - config
+  - name: copy *.sh -> /opt/*.sh
+    copy: 
+      src: files/borgclient/{{ item }}
+      dest: /opt
+      mode: 0755
+      owner: root
+      group: root
+    with_items:
+    - borgcreate.sh
+    - borginit.sh
+    - borglist.sh
+
+  - name: copy service and timer 
+    copy: 
+      src: files/borgclient/{{ item }}
+      dest: /etc/systemd/system
+      mode: 0755
+      owner: root
+      group: root
+    with_items:
+    - borgcreate.service
+    - borgcreate.timer
+#ssh-keygen -b 2048 -t rsa -f /root/.ssh/id_rsa -q -N ""

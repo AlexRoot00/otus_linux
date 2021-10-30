@@ -1,0 +1,2 @@
+Host borgclient
+IdentityFile ~/.ssh/id_rsa

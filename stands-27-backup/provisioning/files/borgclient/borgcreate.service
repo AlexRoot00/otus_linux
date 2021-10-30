@@ -1,0 +1,8 @@
+[Unit]
+Description=backup service
+Wants=create.timer
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /opt/borgcreate.sh
+[Install]
+WantedBy=multi-user.target
