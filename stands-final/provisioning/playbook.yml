@@ -1,0 +1,48 @@
+- hosts: all
+  become: yes 
+  tasks:
+  - name: Update packages 
+    shell: dnf update -y
+  - name: install packages 
+    dnf:
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - bind
+      - bind-utils
+      - ntp
+      - policycoreutils-python
+      - setools
+      - setroubleshoot-server
+- hosts: webproxy # Nginx proxy
+  become: yes 
+  roles:
+    - webproxy
+- hosts: webserver # Apache webserver(maybe ... wordpress ) 
+  become: yes 
+  roles:
+
+- hosts: pgproxy # PG prxoy server 
+  become: yes 
+  roles:
+
+- hosts: db1 # postgres
+  become: yes 
+  roles:
+
+- hosts: db2  #postgres replica
+  become: yes 
+  roles:
+
+- hosts: logger #zabbix 
+  become: yes 
+  roles:
+
+- hosts: backup # borg or bacula server
+  become: yes 
+  roles:
+
+- hosts: backupreplica  # borg or bacula replica
+  become: yes 
+  roles:

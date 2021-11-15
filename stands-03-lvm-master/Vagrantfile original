@@ -69,16 +69,31 @@ Vagrant.configure("2") do |config|
                     end
             end
   
-        #box.vm.provision "ansible", inline: <<-SHELL
-        #    mkdir -p ~root/.ssh
-        #    cp ~vagrant/.ssh/auth* ~root/.ssh
-        #    SHELL
-        box.vm.provision "ansible" do |ansible|
-        #ansible.verbose = "vvv"
-        ansible.playbook = "playbook.yml"
-        ansible.become = "true"
+        box.vm.provision "shell", inline: <<-SHELL
+            mkdir -p ~root/.ssh
+            cp ~vagrant/.ssh/auth* ~root/.ssh
+            yum install -y mdadm smartmontools hdparm gdisk xfsdump ;
+            pvcreate /dev/sdb ;
+            pvcreate /dev/sd[d,e];pvcreate /dev/sdc;
+            vgcreate root /dev/sdb ;
+            vgcreate home /dev/sdc;
+            vgcreate var /dev/sd[d,e];
+            lvcreate -l 80%FREE -n root root;
+            mkfs.xfs /dev/root/root; 
+            lvcreate -l 100%FREE -n var var;
+            mkfs.btrfs /dev/var/var;
+            lvcreate -l 100%FREE -n home home;
+            mkfs.xfs /dev/home/home;
+            xfsdump -J - /dev/VolGroup00/LogVol00 | xfsrestore -J - /mnt 
+           for i in /proc/ /sys/ /dev/ /run/ /boot/ ; do mount --bind $i /mnt$i;done ;
+           chroot /mnt/ ;  grub2-mkconfig -o /boot/grub2/grub.cfg ;
+           cd /boot ; for i in `ls initramfs-*img` ;do dracut -v $i `echo $i|sed "s/initramfs-//g;s/.img//g"` --force;
+            done ; 
+            echo "This is a test 2 again" | sed 's/rd.lvm.lv=VolGroup00\/\LogVol00\/\rd.lvm.lv=root\/\root/g' /boot/grub2/grub.cfg ;
+            sed 's/root=\/\dev\/\mapper\/\VolGroup00-LogVol00/root=\/\dev\/\mapper\/\root-root/g' /boot/grub2/grub.cfg;
+          SHELL
   
         end
     end
   end
-  end
+  

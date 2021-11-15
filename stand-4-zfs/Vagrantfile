@@ -87,6 +87,12 @@ config.vm.define "server" do |server|
   server.vm.provider "virtualbox" do |vb|
     vb.memory = "1024"
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    unless File.exist?(disk)
+      vb.customize ['createhd', '--filename', disk, '--variant', 'Fixed', '--size', 2 * 2048]
+    end
+    vb.memory = "2048"
+    vb.customize ['storageattach', :id,  '--storagectl', 'SATAController', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk]
+  en
   end
 
   server.vm.provider 'virtualbox' do |vbx|

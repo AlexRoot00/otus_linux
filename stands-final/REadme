@@ -1,0 +1,19 @@
+WEB PROJECT
+->
+firewall/proxy (https:443)
+ |-> nginx web pajes   ->Backup
+ |-> nginx web replica ->Backup
+
+1.backup
+  |->borg(cients,server)
+
+proxy BD
+|->pg
+|->pgreplica
+backup
+|->backup
+  |->replica
+
+logging
+|-> zabbix ->external service 
+|-> elk

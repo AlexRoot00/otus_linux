@@ -1,0 +1,67 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "centos/8"
+  config.vm.box_check_update = true
+  #config.vbguest.auto_update = false
+
+    config.vm.define "webproxy", primary: true do |w|
+      w.vm.hostname = 'webproxy'
+      w.vm.network "private_network", ip: "192.168.12.10"
+      w.vm.provider :virtualbox do |v|
+        v.name = "webproxy"
+        v.customize ["modifyvm", :id, "--cpus", 2, "--memory", "1024"]
+    end
+    config.vm.define "nginx1", primary: true do |w|
+      w.vm.hostname = 'nginx1'
+      w.vm.network "private_network", ip: "192.168.12.11"
+      w.vm.provider :virtualbox do |v|
+        v.name = "nginx1"
+        v.customize ["modifyvm", :id, "--cpus", 2, "--memory", "1024"]
+    end
+    config.vm.define "nginx2", primary: true do |w|
+      w.vm.hostname = 'nginx2'
+      w.vm.network "private_network", ip: "192.168.12.12"
+      w.vm.provider :virtualbox do |v|
+        v.name = "nginx2"
+        v.customize ["modifyvm", :id, "--cpus", 2, "--memory", "1024"]
+    end  
+    config.vm.define "pgproxy", primary: true do |w|
+      w.vm.hostname = 'pgproxy'
+      w.vm.network "private_network", ip: "192.168.12.13"
+      w.vm.provider :virtualbox do |v|
+        v.name = "pgproxy"
+        v.customize ["modifyvm", :id, "--cpus", 2, "--memory", "1024"]
+    end
+    config.vm.define "db1", primary: true do |w|
+      w.vm.hostname = 'db1'
+      w.vm.network "private_network", ip: "192.168.12.14"
+      w.vm.provider :virtualbox do |v|
+        v.name = "db1"
+        v.customize ["modifyvm", :id, "--cpus", 2, "--memory", "1024"]
+    end
+    config.vm.define "zabbix", primary: true do |w|
+      w.vm.hostname = 'zabbix'
+      w.vm.network "private_network", ip: "192.168.12.15"
+      w.vm.provider :virtualbox do |v|
+        v.name = "zabbix"
+        v.customize ["modifyvm", :id, "--cpus", 2, "--memory", "1024"]
+    end
+    config.vm.define "logger", primary: true do |w|
+      w.vm.hostname = 'logger'
+      w.vm.network "private_network", ip: "192.168.12.16"
+      w.vm.provider :virtualbox do |v|
+        v.name = "logger"
+        v.customize ["modifyvm", :id, "--cpus", 2, "--memory", "1024"]
+    end
+    w.vm.provision "ansible" do |ansible|
+        ansible.playbook = "playbook.yml"
+        #ansible.verbose = "vvv"
+    end
+    
+  end
+
+
+  
+end

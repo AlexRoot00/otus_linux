@@ -1,0 +1,15 @@
+- name: install nginx 
+  dnf:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - nginx
+#- name: copy config
+
+#- name: settings IPTABLES
+
+#- name: starting proxy
+
+#- name: setting & start SELinux 
+

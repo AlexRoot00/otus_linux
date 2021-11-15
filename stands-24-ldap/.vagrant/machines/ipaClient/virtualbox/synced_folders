@@ -1,0 +1,1 @@
+{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"/home/alexroot/otus_linux/stands-24-ldap","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}

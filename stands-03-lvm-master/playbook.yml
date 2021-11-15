@@ -1,0 +1,52 @@
+---
+- hosts: lvm
+  become: true
+  tasks:
+  - name: install apps 
+    yum: name={{ item }} state=latest
+    with_items:
+      - mdadm
+      - smartmontools
+      - hdparm
+      - gdisk
+      - xfsdump
+  - name: create lvm group root
+    shell: pvcreate /dev/sdb ; vgcreate root /dev/sdb ;lvcreate -l 80%FREE -n root root;mkfs.xfs /dev/root/root; 
+  - name: create lvm group home
+    shell: pvcreate /dev/sdc ; vgcreate home /dev/sdc ;lvcreate -l 100%FREE -n home home;mkfs.xfs /dev/home/home;
+  - name: create lvm group var
+    shell: pvcreate /dev/sd[d,e] ; vgcreate var /dev/sd[d,e];lvcreate -l 100%FREE -n var var;mkfs.xfs /dev/var/var;
+  - name: transfer files from LogVol00 to /mnt
+    shell: xfsdump -J - /dev/VolGroup00/LogVol00 | xfsrestore -J - /mnt
+  - name: mount /proc/ /sys/ /dev/ /run/ /boot/ in /mnt
+    shell: for i in /proc/ /sys/ /dev/ /run/ /boot/ ; do mount --bind $i /mnt$i;done ;chroot /mnt/ ;  grub2-mkconfig -o /boot/grub2/grub.cfg ;
+  #- name: grub2-mkconfig grub config in /mnt/boot/grub2/grub.cfg
+  #  shell: chroot /mnt/ ;  grub2-mkconfig -o /boot/grub2/grub.cfg ;
+  - name: copy fstab
+    copy: 
+      src: files/{{ item }}
+      dest: /etc/fstab
+      mode: 644
+      owner: root
+      group: root
+    with_items:
+    - fstab
+  - name: copy grub.conf
+    copy: 
+      src: files/{{ item }}
+      dest: /boot/grub2/grub.cfg
+      mode: 644
+      owner: root
+      group: root
+    with_items:
+    - grub.cfg
+  - name: reboot
+    shell: reboot
+# - name: 
+#    shell: cd /boot ; for i in `ls initramfs-*img`;do dracut -v $i `echo $i|sed "s/initramfs-//g;s/.img//g"` --force;done ; 
+#  - name: 
+#    shell: sed 's/root=\/\dev\/\mapper\/\VolGroup00-LogVol00/root=\/\dev\/\mapper\/\root-root/g' /boot/grub2/grub.cfg;
+
+
+  
+  
