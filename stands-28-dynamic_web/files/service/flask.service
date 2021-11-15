@@ -1,0 +1,11 @@
+[Unit]
+Description=Flask
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/websrv
+ExecStart=/bin/python3 websrv.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

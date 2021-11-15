@@ -1,0 +1,11 @@
+[Unit]
+Description=Nodejs
+
+[Service]
+Type=simple
+Restart=always
+
+ExecStart=/bin/node /opt/static/webservice.js
+
+[Install]
+WantedBy=multi-user.target
