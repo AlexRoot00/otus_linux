@@ -1,7 +1,7 @@
 =========Stands-28: DynamicWeb .===================\
 proxy server: nginx \
-service----------|internal|external|Context \
------------------|--ports-|-ports---|--Type \
+service----------|internal-|external|Context \
+-----------------|--ports--|-ports---|--Type \
 goservice:------|--9091--|--81----|plain/json \
 flaskservice:----|--9092--|--82----|plain/json \
 nodejs service: |--3000--|--80----|plain/text 
