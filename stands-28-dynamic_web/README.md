@@ -6,7 +6,7 @@ goservice:------|--9091--|--81----|plain/json \
 flaskservice:----|--9092--|--82----|plain/json \
 nodejs service: |--3000--|--80----|plain/text 
 
-========Output:=================== \
+========Output:=================== 
 >curl 'http://192.168.12.10:80' \
 Hello World \
 >curl 'http://192.168.12.10:81' \
